@@ -1,8 +1,10 @@
 # also install psycopg2 dependency of flask_sqlalchemy
-from flask import Flask, request, send_from_directory, render_template, session
+from flask import Flask, request, send_from_directory, render_template, session, Response
+from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy import text
+import os
 import random
 
 app = Flask(__name__)
@@ -11,6 +13,9 @@ app.secret_key = "god_i_hate_python"
 # Connect to postgres database
 # Utilize environment variable with dotenv for production rollout 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gamer:6644@192.168.50.210/pikenet'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 
 db = SQLAlchemy(app)
 
@@ -119,7 +124,69 @@ def add_snack(data):
 	snackCount += 1
 	print (f"received snack: {data['name']} for a total of {snackCount}" )
 	snacks[snackCount] = data['name']
+
+	# Add snack to database
+	query = text('INSERT INTO public.snacks (name) VALUES (:snackname)')
+	db.session.execute(query, {'snackname': data['name']})  
+	result = db.session.commit()
 	emit('update_snacklist',snacks,broadcast=True)
+
+
+
+# Uploaded a photo of the snack
+
+# Helper function to check extension
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    
+	file = request.files['file']
+	snackname = request.form['snackname']
+	print("receive image for the following snack: ")
+	print(snackname)
+	if file and allowed_file(file.filename):
+		filename = secure_filename(file.filename)
+        
+        # Read the image as binary data
+		photo_data = file.read()
+
+        # Insert file info and binary photo into the PostgreSQL database using raw SQL with SQLAlchemy
+		query = text("""
+            UPDATE public.snacks 
+            SET photo = :photo
+            WHERE name = :name
+        """)
+        
+        # Using db.session.execute() to run the raw SQL query
+		db.session.execute(query, {'name': snackname, 'photo': photo_data})
+		db.session.commit()  # Commit the transaction to save the data in the database
+		
+		return render_template('lobby.html',username=session['user'])
+
+
+	return "File not allowed"
+
+# Retrieve uploaded photo
+@app.route('/image/<string:snackname>')
+def get_image(snackname):
+    # Open a new session to query the database
+	
+	try:
+        # Query the database for the image data using SQLAlchemy
+		result = db.session.execute(text("SELECT photo FROM public.snacks WHERE name = :name"), {'name': snackname})
+
+		snack = result.fetchone()
+		print("Fetching image")
+		print(snack[0])
+		if result and snack[0]:
+            # The image is stored in a bytea column, so we return the raw bytes
+			return Response(snack[0], mimetype='image/jpeg')  # Adjust mimetype if different
+		else:
+			return "Image not found", 404
+	finally:
+		print("finished")
 
 @app.route('/')
 def index():
@@ -200,4 +267,7 @@ def serve_style(filename):
 		return send_from_directory('styles',filename)
 
 if __name__ == '__main__':
+	if not os.path.exists(app.config['UPLOAD_FOLDER']):
+		os.makedirs(app.config['UPLOAD_FOLDER'])
+
 	socketio.run(app, debug=True)
