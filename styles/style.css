@@ -4,6 +4,13 @@
          
   }
 
+@font-face {
+    font-family: 'Franklin Gothic Medium Cond';
+    src: url('Franklin\ Gothic\ Medium\ Cond.ttf') format('ttf'),
+         
+}
+
+
 body{
     background-color:#1a1e2b;
     color:white;
@@ -33,7 +40,7 @@ input{
     font-size:3rem;
     height: 5vh;
     width:80vw;
-    font-family: "Consolas", monospace;
+    font-family: 'Franklin Gothic Medium Cond', sans-serif;
     border-radius: 30px;
     background-color:#2f80ba;
     border-color: #3fa9f5;
