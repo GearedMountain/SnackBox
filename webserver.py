@@ -1,9 +1,18 @@
+# also install psycopg2 dependency of flask_sqlalchemy
 from flask import Flask, request, send_from_directory, render_template, session
 from flask_socketio import SocketIO, emit
+from flask_sqlalchemy import SQLAlchemy 
+from sqlalchemy import text
 import random
 
 app = Flask(__name__)
 app.secret_key = "god_i_hate_python"
+
+# Connect to postgres database
+# Utilize environment variable with dotenv for production rollout 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gamer:6644@192.168.50.210/pikenet'
+
+db = SQLAlchemy(app)
 
 # GAME VARIABLES
 gameStarted = False
@@ -145,6 +154,18 @@ def socket_connected():
 	if 'user' in session:
 		username = session['user']
 		active_sessions.add(username)
+	print (session['user'])
+	result = db.session.execute(text('SELECT * FROM public."users" WHERE "username" = :username'), {'username': session['user']})
+
+	user = result.fetchone()
+
+	if user:
+		print (f"{user[1]} has user id: {user[0]}")
+	else:
+		print ("user not found")
+    # Check if the user was found
+    
+
 	print (f"Client Joined, current count: {len(active_sessions)}")
 	emit('update_playerlist', {'playerlist': ":".join(active_sessions)}, broadcast=True)
 	emit('update_snacklist',snacks)
