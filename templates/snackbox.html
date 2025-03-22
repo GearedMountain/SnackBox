@@ -1,0 +1,181 @@
+<html>
+	<style>
+		#overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background-color: black;
+			animation: dissolve 5s ease-out forwards;
+		}
+
+		/* Dissolve effect */
+		@keyframes dissolve {
+			0% { opacity: 1; }
+			80%	{ opacity: 1; }
+			100% { opacity: 0; }
+		}
+	</style>
+	<link rel="stylesheet" href="styles/style.css">
+	<!--<div id="overlay" class="center" style="align-items: center;">
+		<h1>Columbia</h1>
+		<img src="images/flag.png">
+	</div>-->
+	<body>
+		<h2> Snackbox </h2>		
+		<div id="finalResult">
+
+		</div>
+		<div id="main-gui">
+			<div class="left-column">
+				<h1 id="selectedSnack">Select a Snack</h1>
+				<h1 class="hidden" id="SnackScoreParent">Score: <span id="SnackScore">0</span></h1>
+				<div id="messageList">
+
+				</div>
+				<div id="snacklist" class="center">
+				</div>
+			</div>
+			<div class="right-column" id="right-column">
+			
+			</div>
+
+		</div>
+		<div class="center hidden" id="NextSnackButton"><button onclick="NextSnack()">Start Next Snack</button></div>
+
+
+	</body>	
+
+	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+	
+	<script>
+		//var socket = io.connect("https://thepikenet.com");
+		var ratedThisSnack = false;
+		var socket = io.connect();
+
+		const playerlist = document.getElementById('playerlist');
+
+		const snacklist = document.getElementById('snacklist');
+		
+		function AddSnackLocal(SnackName, SnackID){
+			SnackCount += 1;
+			const newSnack = document.createElement('button');
+			newSnack.id = "snack-" + SnackID;
+			newSnack.innerHTML = SnackName;
+			/*newSnack.addEventListener('change', function() {
+				UpdateSnack(newSnack.id.split("-")[1], newSnack.value)
+			});*/
+			newSnack.addEventListener("click", function() {
+    			SnackSelected(newSnack.id.split("-")[1]);
+			});
+			snacklist.appendChild(newSnack);
+		}
+
+		let availableRatings = []
+		socket.on('update_available_ratings', function(data) {
+			document.getElementById('right-column');
+			//availableRatings = JSON.parse(data.availableRating)
+			console.log("ratings : " + data.availableRatings)
+
+			document.getElementById("right-column").innerHTML = '';
+			data.availableRating.forEach(function(item) {
+				if(item !== 0)
+				{
+					let RatingButton = document.createElement("button");
+					RatingButton.textContent = item;
+					RatingButton.classList.add("rating-button");
+					RatingButton.addEventListener("click", function() {
+						//alert("Snack rated!");
+						if(!ratedThisSnack){
+							HideRatings()
+							socket.emit('snack_rated', { rating:RatingButton.textContent });
+							document.getElementById("NextSnackButton").classList.remove('hidden')
+							ratedThisSnack = true;
+						}
+					});
+					document.getElementById("right-column").appendChild(RatingButton);
+				}
+			});
+		})
+		socket.on('update_snacklist', function(data) {
+			console.log(data)
+			snacklist.innerHTML = '';
+			SnackCount = 0;
+			Object.entries(data).forEach(([key, value]) => {
+				AddSnackLocal(value, key)
+			});
+			console.log(SnackCount)
+			
+			
+		});
+		
+		socket.on('snack_selected_server', function(data) {
+				SnackSelectedLocal(data.snackSelected)
+				ratedThisSnack = false;
+		});
+
+		socket.on('snack_rated_server', function(data) {
+				document.getElementById("SnackScore").innerHTML = data.snacksRating
+				let MessageList = document.getElementById("messageList")
+				let RatingMessage = document.createElement("h2");
+				RatingMessage.innerHTML = data.message;
+
+				MessageList.appendChild(RatingMessage)
+		});
+
+		function ShowRatings() {
+    		document.getElementById("main-gui").classList.add("expanded");
+			
+		}	
+
+		function HideRatings() {
+    		document.getElementById("main-gui").classList.remove("expanded");
+		}
+
+		function SnackSelectedLocal(selected){
+			document.getElementById("selectedSnack").innerHTML = selected;
+			document.getElementById("snacklist").classList.add("hidden");
+			document.getElementById("SnackScoreParent").classList.remove("hidden");
+			document.getElementById("SnackScore").innerHTML = "0";
+			ShowRatings()
+		}
+
+		socket.on('next_snack_server', function(data) {
+			document.getElementById("snacklist").classList.remove("hidden");
+			document.getElementById("SnackScoreParent").classList.add("hidden");
+		    document.getElementById("messageList").innerHTML = ""
+			document.getElementById("NextSnackButton").classList.add('hidden')
+
+		});
+
+		socket.on('snacks_finished', function(data) {
+			document.getElementById("selectedSnack").classList.add('hidden');
+			document.getElementById("messageList").innerHTML = ""
+			Object.entries(data).forEach(([key, value]) => {
+				FinalResults(key, value)
+			});
+			
+		});
+
+		function FinalResults(name, score){
+			const result = document.createElement('h2');
+			document.getElementById("NextSnackButton").classList.add('hidden')
+			result.innerHTML = name + " : " + score;
+			document.getElementById("finalResult").appendChild(result)
+
+		}
+
+		function NextSnack(){
+			document.getElementById("SnackScoreParent").classList.add("hidden");
+			socket.emit('next_snack', {data:true});
+
+		}
+
+		function SnackSelected(ID){
+			socket.emit('snack_selected', { id:ID });
+		}
+
+		
+	</script>
+</html>

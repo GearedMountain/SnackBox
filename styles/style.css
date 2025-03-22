@@ -1,0 +1,111 @@
+body{
+    background-color:#1a1e2b;
+    color:white;
+    font-family: "Consolas", monospace; /* Or any monospace font */
+    margin: 0px;
+    
+}
+
+.center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1{
+    width:100%;
+    text-align: center;
+    font-size:4rem;
+}
+h2{
+    width:100%;
+    text-align: center;
+    font-size:3rem;
+}
+
+input{
+    font-size:3rem;
+    height: 5vh;
+    width:80vw;
+    font-family: "Consolas", monospace;
+    border-radius: 30px;
+    background-color:#2f80ba;
+    border-color: #3fa9f5;
+    border-width: 0px;
+    padding-left: 2rem;
+    color:white;
+}
+input::placeholder{
+    color:White;
+
+}
+#snacklist input{
+    margin-bottom:1vh;
+}
+
+button {
+    border-radius: 30px;
+    border-width: 0px;
+    font-size:3rem;
+    height: 5vh;
+    width:80vw;
+    background-color: #2f80ba;
+    color:white;
+    box-shadow: 10px 10px #3fa9f5;
+    font-family: "Consolas", monospace;
+    font-weight: bold;
+}
+
+.hidden{
+    display:none;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:100%;
+    height:10vh;
+    background-color: black;
+}
+
+.pikenet-logo{
+    height:8vh;
+}
+
+#main-gui{
+    display: grid;
+    grid-template-columns: 100vw 0vw; /* Two equal columns */
+    gap: 20px;
+    transition: grid-template-columns 1s ease-in-out;
+    width: 100%;
+    height: 75vh;
+    overflow-x: hidden;
+    overflow-y: hidden; 
+}
+
+#main-gui.expanded {
+    grid-template-columns: 75vw 25vw; /* Both columns equal */
+    
+}
+
+.right-column {
+    overflow-y: auto; 
+}
+
+.left-column{
+    overflow-y: auto; 
+}
+
+.rating-button {
+    margin-bottom: 2vw;
+    height:20vw;
+    width:20vw;
+    border-radius: 30px;
+    box-shadow: 0px 0px #3fa9f5;
+}
+
+.left-column button{
+    width:80%;
+    margin-bottom: 2vw;
+}

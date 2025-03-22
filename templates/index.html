@@ -1,0 +1,33 @@
+<html>
+	<style>
+		body{
+			background-color:white;
+		}
+		
+	</style>
+	<link rel="stylesheet" href="styles/style.css">
+	<body>
+		<div class="header">
+			<img src="images/PikeNetLogo.png" class="pikenet-logo">
+		</div>
+		<h1>Welcome, Please Choose a Unique Username</h1>
+		<div>
+			<form class="center" action="/submit_username" method="POST">
+				<input type="text" id="username" name="username" placeholder="USERNAME"></input><br>
+				<button type="submit">Continue</button>
+			</form>
+		</div>
+	</body>	
+
+	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+	
+	<script>
+		//var socket = io.connect("https://thepikenet.com");
+		//var socket = io.connect("https://thepikenet.com");
+		/*
+		socket.on('update_playercount', function(data) {
+			document.getElementById("current_playercount").innerHTML = data.current_playercount;
+		});
+		*/
+	</script>
+</html>

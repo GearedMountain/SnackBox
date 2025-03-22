@@ -1,0 +1,120 @@
+<html>
+	<style>
+		#top-portion{
+			width:100vw;
+			height:28vh;
+			overflow-x:scroll;
+		}
+
+		#bottom-portion{
+			width:100vw;
+			height:37vh;
+			overflow-x:scroll;
+		}
+		
+		#add_snack{
+			margin-bottom: 2vh;
+			background-color: #3fa9f5;
+		}
+
+
+	</style>
+	<link rel="stylesheet" href="styles/style.css">
+	<body class="center">
+		<h1>Add Snacks</h1>
+		<!--<h1>{{ username }}</h1>-->
+		<form action="/start_game" method="POST">
+			<button type="submit">Start Game</button>
+		</form>		
+		
+		<h2 style="margin-bottom: 0px;">Joined:</h2>		
+		<div id="top-portion" class="center">
+			<div id="playerlist"></div>
+		</div>
+		<input id="add_snack" placeholder="Snack Name"></input>
+		<div id="bottom-portion" class="center">
+			<div id="snacklist" class="center">
+			</div>
+			
+		</div>
+	</body>	
+
+	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+	
+	<script>
+		var SnackCount = 0;
+
+		//var socket = io.connect("https://thepikenet.com");
+		var socket = io.connect();
+
+		const playerlist = document.getElementById('playerlist');
+		const snacklist = document.getElementById('snacklist');
+		
+		function AddSnackLocal(SnackName){
+			SnackCount += 1;
+			const newSnack = document.createElement('input');
+			newSnack.id = "snack-" + SnackCount;
+			newSnack.value = SnackName;
+			newSnack.addEventListener('change', function() {
+				UpdateSnack(newSnack.id.split("-")[1], newSnack.value)
+			});
+			snacklist.appendChild(newSnack);
+		}
+	
+		function AddSnack(SnackName){
+			socket.emit('snack_added',{ name:SnackName });
+		}
+
+		const AddSnackField = document.getElementById("add_snack");
+		AddSnackField.addEventListener('change', function() {
+			console.log("New Snack Created")
+			if(AddSnackField.value !== "")
+			{
+				AddSnack(AddSnackField.value)
+				AddSnackField.value = "";
+				//Create New Snack Field
+			}
+		});
+		
+		function UpdateSnack(ID, NewName){
+			console.log("updating " + ID + " to " + NewName)
+			socket.emit('snack_updated', { id:ID, newName:NewName });
+		}
+
+		//AddSnack("Awesome")
+		function SnackUpdated(snackid, snackname){
+			socket.emit('snack_updated', { id:snackid, name:snackname});
+		}
+
+		socket.on('update_snacklist', function(data) {
+			console.log(data)
+			snacklist.innerHTML = '';
+			SnackCount = 0;
+			Object.entries(data).forEach(([key, value]) => {
+				AddSnackLocal(value)
+			});
+			bottomportion = document.getElementById("bottom-portion");
+    		bottomportion.scrollTop = bottomportion.scrollHeight;
+		});
+		
+		socket.on('update_playerlist', function(data) {
+		
+			playerlist.innerHTML = '';
+			
+			const playerlistArr = data.playerlist.split(':');
+
+			playerlistArr.forEach(item => {
+				const h2 = document.createElement('h2');
+				h2.textContent = item;
+				playerlist.appendChild(h2);
+			});
+			
+			console.log("upated list " + data.playerlist)
+		});
+
+		socket.on('start_game',function(data){
+			console.log(data.data)
+			window.location.href = '/snackbox';
+		});		
+	</script>
+</html>
