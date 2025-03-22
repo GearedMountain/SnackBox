@@ -4,8 +4,15 @@
 		body{
 			background-color:black;
 		}
+
 		main{
 			background-color:#1a1e2b;
+			padding-top: 2vh;
+			padding-bottom: 2vh;
+		}
+
+		.login-section{
+			height:auto;
 		}
 	</style>
 	
@@ -14,12 +21,14 @@
 		<div class="header">
 			<img src="images/PikeNetLogo.png" class="pikenet-logo">
 		</div>
-		<h1>Welcome, Please Choose a Unique Username</h1>
-		<div>
-			<form class="center" action="/submit_username" method="POST">
-				<input type="text" id="username" name="username" placeholder="USERNAME"></input><br>
-				<button type="submit">Continue</button>
-			</form>
+		<div class="login-section">
+			<h1>Welcome, Please Choose a Unique Username</h1>
+			<div>
+				<form class="center" action="/submit_username" method="POST">
+					<input type="text" id="username" name="username" placeholder="USERNAME"></input><br>
+					<button type="submit">Continue</button>
+				</form>
+		</div>
 		</div>
 
 		<!-- Possible future use for image upload of snacks
