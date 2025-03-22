@@ -1,7 +1,13 @@
+@font-face {
+    font-family: 'Franklin Gothic Demi Cond';
+    src: url('Franklin\ Gothic\ Demi\ Cond.ttf') format('ttf'),
+         
+  }
+
 body{
     background-color:#1a1e2b;
     color:white;
-    font-family: "Consolas", monospace; /* Or any monospace font */
+    font-family: 'Franklin Gothic Demi Cond', sans-serif;
     margin: 0px;
     
 }
