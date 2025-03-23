@@ -1,4 +1,6 @@
 <html>
+	<link rel="stylesheet" href="styles/style.css">
+
 	<style>
 		#overlay {
 			position: fixed;
@@ -30,11 +32,18 @@
 			width:70vw;
 			height:70vw;
 			padding-left:2.5vw;
-			display: block;
+			
  			margin: auto;
 		}
+
+		.hidden{
+			display:none important!;
+		}
+
+		.block{
+			display: block;
+		}
 	</style>
-	<link rel="stylesheet" href="styles/style.css">
 	<!--<div id="overlay" class="center" style="align-items: center;">
 		<h1>Columbia</h1>
 		<img src="images/flag.png">
@@ -138,6 +147,7 @@
 		socket.on('snack_selected_server', function(data) {
 				SnackSelectedLocal(data.snackSelected)
 				document.getElementById("snackPhoto").classList.remove('hidden')
+				document.getElementById("snackPhoto").classList.add('block')
 
 				let img = new Image(); // Create image element dynamically
 				img.src = `/image/${data.snackSelected}`; 
@@ -146,6 +156,8 @@
 				img.onload = function() {
 					document.getElementById("snackPhoto").src = `/image/${data.snackSelected}`// Add to the page only after loading
 					document.getElementById("snackPhoto").classList.remove('hidden')
+					document.getElementById("snackPhoto").classList.add('block')
+
 
 					console.log("Image fully loaded!");
 				}
@@ -155,6 +167,8 @@
         			console.log("Image failed to load.");
 					document.getElementById("snackPhoto").src = ""
 					document.getElementById("snackPhoto").classList.add('hidden')
+					document.getElementById("snackPhoto").classList.add('remove')
+
     			};
 				ratedThisSnack = false;
 		});
@@ -220,6 +234,7 @@
 			document.getElementById("NextSnackButton").classList.add('hidden')
 			document.getElementById("selectedSnack").innerHTML = "Select a Snack"
 			document.getElementById("snackPhoto").classList.add('hidden')
+			document.getElementById("snackPhoto").classList.remove('block')
 
 		});
 
