@@ -1,3 +1,8 @@
+countryName = "Columbia"
+from datetime import datetime
+
+current_year = datetime.now().year
+sessionId = f'{countryName}{current_year}'
 # also install psycopg2 dependency of flask_sqlalchemy
 from flask import Flask, request, send_from_directory, render_template, session, Response
 from werkzeug.utils import secure_filename
@@ -30,9 +35,14 @@ active_sessions = set()
 snackCount = 0
 snacks = {}
 ratedSnacks = {}
+ratingLogs = {}
 
-currentlyRating = ""
+# Name of the snack currently rating, set to 0 when finished for logic to see if still rating
+currentlyRating = 0
 
+# Playercount for votes expected, playersrated for how many have casted
+playerCount = 0
+playersRated = 0
 # Class for all game data
 availableRatings = {}
 
@@ -45,14 +55,19 @@ def generate_random_id():
 def start_game():
 	global gameStarted
 	global availableRatings
+	global playerCount
+	playerCount = 0
 	gameStarted = True
 	print ("initializing game")
 	for i in active_sessions:
 		availableRatings[i] = [0] * snackCount
+		playerCount += 1
 		for j in range(snackCount):
 			availableRatings[i][j] = j+1
 		print(availableRatings[i])
-
+		
+	print(f"Game Playercount: {playerCount}")
+	
 	socketio.emit('start_game',{'data':True})	
 
 	
@@ -72,8 +87,11 @@ def snackbox():
 @socketio.on('next_snack')
 def next_snack(data):
 	global ratedSnacks
+	global currentlyRating 
+	global playersRated
+	playersRated = 0
+	currentlyRating = 0
 	if len(snacks) == 0 :
-		print("finished")
 		emit('snacks_finished',ratedSnacks,broadcast=True)
 
 	else:
@@ -85,20 +103,36 @@ def next_snack(data):
 @socketio.on('snack_rated')
 def snack_rated(data):
 	global availableRatings
+	global ratingLogs
+	global playersRated
+	global playerCount
+
+	playersRated += 1
+
+	if playersRated == playerCount:
+		print("ALL PLAYERS HAVE VOTED")
+		emit('all_players_voted',broadcast=True)
 	rating = int(data['rating'])
 	logMessage = f"{session['user']} rated {currentlyRating} a {data['rating']}"
 	availableRatings[session['user']][rating-1] = 0
 	print ( availableRatings[session['user']] )
 	ratedSnacks[currentlyRating] += int(data['rating'])
-	emit('snack_rated_server',{ 'message' : logMessage, 'snacksRating' : ratedSnacks[currentlyRating]},broadcast=True)
-	emit('update_available_ratings',{'availableRating':availableRatings[session['user']]})	
 
+	ratingLogs[session['user']] = [currentlyRating, data['rating']]
+	emit('snack_rated_server',{ 'message' : logMessage, 'snacksRating' : ratedSnacks[currentlyRating]},broadcast=True)
+	emit('update_available_ratings',{'availableRatings':availableRatings[session['user']]})	
+	emit('update_rating_logs',ratingLogs)
 
 @socketio.on('snack_selected')
 def snack_selected(data):
 	global snacks
 	global currentlyRating
 	global ratedSnacks
+	global ratingLogs
+	global playersRated
+	playersRated = 0
+	ratingLogs = {}
+
 	selected = data['id']
 	selectedName = snacks[int(selected)]
 	currentlyRating = selectedName
@@ -113,22 +147,38 @@ def snack_selected(data):
 @socketio.on('snack_updated')
 def change_snack(data):
 	global snacks
-	snacks[data['id']] = data['newName']
-	emit('update_snacklist',snacks,broadcast=True)
 	
-	
+
+	try:
+		oldname = snacks[int(data['id'])]
+		print(f'snack {oldname} updated')
+		query = text('UPDATE public.snacks SET name = :snackname WHERE name = :oldname')
+		db.session.execute(query, {'snackname': data['newName'],'oldname': oldname})  
+		result = db.session.commit()
+		snacks[int(data['id'])] = data['newName']
+	except:
+		print("Name change failed")
+	#emit('update_snacklist',snacks,broadcast=True)
+
 @socketio.on('snack_added')
 def add_snack(data):
 	global snackCount
 	global snacks
-	snackCount += 1
-	print (f"received snack: {data['name']} for a total of {snackCount}" )
-	snacks[snackCount] = data['name']
+	global sessionId
+		
+	try:
+		query = text('INSERT INTO public.snacks (name, "sessionId") VALUES (:snackname, :sessionId)')
+		db.session.execute(query, {'snackname': data['name'],'sessionId': sessionId})  
+		result = db.session.commit()
 
+		snackCount += 1
+		print (f"received snack: {data['name']} for a total of {snackCount}" )
+		snacks[snackCount] = data['name']
+	except:
+		print("snack already exists")
+	
 	# Add snack to database
-	query = text('INSERT INTO public.snacks (name) VALUES (:snackname)')
-	db.session.execute(query, {'snackname': data['name']})  
-	result = db.session.commit()
+	
 	emit('update_snacklist',snacks,broadcast=True)
 
 
@@ -162,7 +212,8 @@ def upload_file():
         # Using db.session.execute() to run the raw SQL query
 		db.session.execute(query, {'name': snackname, 'photo': photo_data})
 		db.session.commit()  # Commit the transaction to save the data in the database
-		
+		socketio.emit('update_snacklist',snacks)
+
 		return render_template('lobby.html',username=session['user'])
 
 
@@ -214,22 +265,37 @@ def username_selected():
 @socketio.on('connect')
 def socket_connected():
 	global gameStarted
+	global ratingLogs
+	global currentlyRating
+	global playersRated
+	global playerCount
+
+	socketio.emit('whats_my_name',session['user'], room=request.sid)
 	if gameStarted:
+		if currentlyRating != 0:
+			socketio.emit('snack_selected_server', {'snackSelected' : currentlyRating}, room=request.sid)
+			socketio.emit('update_rating_logs',ratingLogs, room=request.sid)
+		if playersRated == playerCount:
+			# If everyone has voted, give relog the next snack button if lost
+			socketio.emit('all_players_voted', room=request.sid)
+			
 		print(availableRatings[session['user']])
-		socketio.emit('update_available_ratings',{'availableRating':availableRatings[session['user']]})	
+
+		
+		socketio.emit('update_available_ratings',{'availableRatings':availableRatings[session['user']]}, room=request.sid)	
 	
 	if 'user' in session:
 		username = session['user']
 		active_sessions.add(username)
 	print (session['user'])
-	result = db.session.execute(text('SELECT * FROM public."users" WHERE "username" = :username'), {'username': session['user']})
+	#result = db.session.execute(text('SELECT * FROM public."users" WHERE "username" = :username'), {'username': session['user']})
 
-	user = result.fetchone()
+	#user = result.fetchone()
 
-	if user:
-		print (f"{user[1]} has user id: {user[0]}")
-	else:
-		print ("user not found")
+	#if user:
+	#	print (f"{user[1]} has user id: {user[0]}")
+	#else:
+	#	print ("user not found")
     # Check if the user was found
     
 

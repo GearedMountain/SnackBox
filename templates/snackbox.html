@@ -16,6 +16,23 @@
 			80%	{ opacity: 1; }
 			100% { opacity: 0; }
 		}
+
+		#loading{
+			position: fixed;
+			height: 100%;
+			width: 100%;
+			top:0px;
+			background-color: black;
+			color:white;
+			vertical-align: middle;
+		}
+		#snackPhoto{
+			width:70vw;
+			height:70vw;
+			padding-left:2.5vw;
+			display: block;
+ 			margin: auto;
+		}
 	</style>
 	<link rel="stylesheet" href="styles/style.css">
 	<!--<div id="overlay" class="center" style="align-items: center;">
@@ -23,12 +40,13 @@
 		<img src="images/flag.png">
 	</div>-->
 	<body>
-		<h2> Snackbox </h2>		
+		<h2 id="myName"> Snackbox </h2>		
 		<div id="finalResult">
 
 		</div>
 		<div id="main-gui">
 			<div class="left-column">
+				<img id="snackPhoto" class="hidden">
 				<h1 id="selectedSnack">Select a Snack</h1>
 				<h1 class="hidden" id="SnackScoreParent">Score: <span id="SnackScore">0</span></h1>
 				<div id="messageList">
@@ -43,7 +61,9 @@
 
 		</div>
 		<div class="center hidden" id="NextSnackButton"><button onclick="NextSnack()">Start Next Snack</button></div>
-
+		<div id="loading">
+			<h1 style="position:fixed;top:45%;vertical-align: middle;">Loading...</h1>
+		</div>
 
 	</body>	
 
@@ -52,6 +72,7 @@
 	<script>
 		//var socket = io.connect("https://thepikenet.com");
 		var ratedThisSnack = false;
+		var myName = ""
 		var socket = io.connect();
 
 		const playerlist = document.getElementById('playerlist');
@@ -76,10 +97,10 @@
 		socket.on('update_available_ratings', function(data) {
 			document.getElementById('right-column');
 			//availableRatings = JSON.parse(data.availableRating)
-			console.log("ratings : " + data.availableRatings)
+			console.log("ratings : " + data["availableRatings"])
 
 			document.getElementById("right-column").innerHTML = '';
-			data.availableRating.forEach(function(item) {
+			data["availableRatings"].forEach(function(item) {
 				if(item !== 0)
 				{
 					let RatingButton = document.createElement("button");
@@ -90,7 +111,6 @@
 						if(!ratedThisSnack){
 							HideRatings()
 							socket.emit('snack_rated', { rating:RatingButton.textContent });
-							document.getElementById("NextSnackButton").classList.remove('hidden')
 							ratedThisSnack = true;
 						}
 					});
@@ -106,23 +126,75 @@
 				AddSnackLocal(value, key)
 			});
 			console.log(SnackCount)
-			
+			try{
+				document.getElementById("loading").remove();
+			}
+			catch{
+
+			}
 			
 		});
 		
 		socket.on('snack_selected_server', function(data) {
 				SnackSelectedLocal(data.snackSelected)
+				document.getElementById("snackPhoto").classList.remove('hidden')
+
+				let img = new Image(); // Create image element dynamically
+				img.src = `/image/${data.snackSelected}`; 
+				document.getElementById("snackPhoto").src = "/images/loading.gif"
+
+				img.onload = function() {
+					document.getElementById("snackPhoto").src = `/image/${data.snackSelected}`// Add to the page only after loading
+					document.getElementById("snackPhoto").classList.remove('hidden')
+
+					console.log("Image fully loaded!");
+				}
+
+				// If the image doesnt exist, remove the loading sign too
+				img.onerror = function() {
+        			console.log("Image failed to load.");
+					document.getElementById("snackPhoto").src = ""
+					document.getElementById("snackPhoto").classList.add('hidden')
+    			};
 				ratedThisSnack = false;
 		});
 
+		socket.on('update_rating_logs', function(data) {
+			var snackScore = 0
+			document.getElementById("messageList").innerHTML = ""
+			Object.entries(data).forEach(([key, value]) => {
+				if(key == myName)
+				{
+					console.log("already rated this")
+					document.getElementById("main-gui").classList.remove("expanded");
+				}
+				snackScore += parseInt(value[1])
+				AddLogLocal(key + " rated " + value[0] + " a " + value[1], snackScore)
+				console.log(key + " rated " + value[0] + " a " + value[1]) 
+			});
+
+		});
+		
+		socket.on('whats_my_name', function(data) {
+				console.log("my name: " + data)	
+				myName = data
+				document.getElementById("myName").innerHTML = myName + "'s visit to Columbia"
+		});
+		
 		socket.on('snack_rated_server', function(data) {
-				document.getElementById("SnackScore").innerHTML = data.snacksRating
+				AddLogLocal(data.message, data.snacksRating)
+		});
+		socket.on('all_players_voted', function(data) {
+				document.getElementById("NextSnackButton").classList.remove('hidden')
+		});
+
+		function AddLogLocal(message, snackScore){
+				document.getElementById("SnackScore").innerHTML = snackScore
 				let MessageList = document.getElementById("messageList")
 				let RatingMessage = document.createElement("h2");
-				RatingMessage.innerHTML = data.message;
-
+				RatingMessage.innerHTML = message;
 				MessageList.appendChild(RatingMessage)
-		});
+		}
 
 		function ShowRatings() {
     		document.getElementById("main-gui").classList.add("expanded");
@@ -146,6 +218,8 @@
 			document.getElementById("SnackScoreParent").classList.add("hidden");
 		    document.getElementById("messageList").innerHTML = ""
 			document.getElementById("NextSnackButton").classList.add('hidden')
+			document.getElementById("selectedSnack").innerHTML = "Select a Snack"
+			document.getElementById("snackPhoto").classList.add('hidden')
 
 		});
 

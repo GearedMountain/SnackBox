@@ -30,6 +30,14 @@
 			width:100%;
 		}
 
+		.has-image{
+			background-color:green;
+		}
+		
+		.no-image{
+			background-color:red;
+		}
+
 	</style>
 	
 	<body class="center">
@@ -50,7 +58,7 @@
 			
 		</div>
 
-		<img src="{{ url_for('get_image', snackname='peepee') }}" alt="User Image">
+		<!--<img id="testing" alt="User Image">-->
 
 		<!-- FOR IMAGE UPLOAD, CHANGE SHORTLY -->
 
@@ -61,6 +69,7 @@
 			<input  type="file" id="file" name="file" accept="image/*" onchange="autoSubmit()">
 			<input  type="text" id="snackname" name="snackname" accept="text">
 		</form>
+		
 	</body>	
 
 	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
@@ -79,12 +88,32 @@
 			const newSnackInput = document.createElement('input');
 			newSnackInput.id = "snack-" + SnackCount;
 			newSnackInput.value = SnackName;
+
+			// Check to see if this snack has an image
+			const img = new Image();
+			
+			//let searchTemplate = "{{ url_for('get_image', snackname='${SnackName}') }}"
+			//let searchURL = searchTemplate.replace("${SnackName}", SnackName)
+			
+
 			newSnackInput.addEventListener('change', function() {
 				UpdateSnack(newSnackInput.id.split("-")[1], newSnackInput.value)
 			});
-
+			
 			const newSnackButton = document.createElement('button')
 			newSnackButton.innerHTML = "+"
+
+			console.log("Searching for " + SnackName)
+			//document.getElementById("testing").src = `/image/Test2`
+			img.src = `/image/${SnackName}`;
+			//console.log("Searching for " + searchURL)
+
+			img.onerror = function() {
+        		console.log("Image failed to load.");
+				newSnackButton.classList.add("no-image")
+    		};
+			
+			
 			
 			newSnackButton.id = SnackName
 			newSnackButton.onclick=function(){
