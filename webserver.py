@@ -97,7 +97,7 @@ def next_snack(data):
 	else:
 		emit('update_snacklist',snacks,broadcast=True)
 		emit('next_snack_server',snacks,broadcast=True)
-		emit('update_available_ratings',{'availableRating':availableRatings[session['user']]})	
+		#emit('update_available_ratings',{'availableRating':availableRatings[session['user']]})	
 
 
 @socketio.on('snack_rated')

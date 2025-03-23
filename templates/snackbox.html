@@ -29,8 +29,8 @@
 			vertical-align: middle;
 		}
 		#snackPhoto{
-			width:70vw;
-			height:70vw;
+			width:50vw;
+			height:50vw;
 			padding-left:2.5vw;
 			
  			margin: auto;
@@ -146,8 +146,8 @@
 		
 		socket.on('snack_selected_server', function(data) {
 				SnackSelectedLocal(data.snackSelected)
-				document.getElementById("snackPhoto").classList.remove('hidden')
-				document.getElementById("snackPhoto").classList.add('block')
+				//document.getElementById("snackPhoto").classList.remove('hidden')
+				//document.getElementById("snackPhoto").classList.add('block')
 
 				let img = new Image(); // Create image element dynamically
 				img.src = `/image/${data.snackSelected}`; 

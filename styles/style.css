@@ -98,22 +98,27 @@ button {
 }
 
 #main-gui.expanded {
-    grid-template-columns: 75vw 25vw; /* Both columns equal */
+    grid-template-columns: 60vw 40vw; /* Both columns equal */
     
 }
 
 .right-column {
     overflow-y: auto; 
+    display: flex;
+    flex-wrap: wrap; /* Allows items to wrap to the next row */
+    align-content: flex-start; 
+    gap: 2vw;
 }
 
 .left-column{
-    overflow-y: auto; 
+    overflow-y: 4vw; 
 }
 
 .rating-button {
-    margin-bottom: 2vw;
-    height:20vw;
-    width:20vw;
+
+   
+    height:16vw;
+    width:16vw;
     border-radius: 30px;
     box-shadow: 0px 0px #3fa9f5;
 }
