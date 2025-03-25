@@ -204,6 +204,7 @@ def upload_file():
 
 		# Store the file in the local server storage
 		global UPLOAD_FOLDER
+		print(str(result.fetchone()[0]))
 		file_path = os.path.join(UPLOAD_FOLDER,str(result.fetchone()[0]))
 		file.save(file_path)
 		
@@ -226,13 +227,14 @@ def get_image(snackname):
 	
 	try:
         # Query the database for the image data using SQLAlchemy
-		result = db.session.execute(text("SELECT photo FROM public.snacks WHERE name = :name"), {'name': snackname})
+		result = db.session.execute(text("SELECT id FROM public.snacks WHERE name = :name"), {'name': snackname})
 
 		snack = result.fetchone()
 		print("Fetching image")
 		print(snack[0])
 		if result and snack[0]:
             # The image is stored in a bytea column, so we return the raw bytes
+			return send_from_directory('images',str(snack[0]))
 			return Response(snack[0], mimetype='image/jpeg')  # Adjust mimetype if different
 		else:
 			return "Image not found", 404
