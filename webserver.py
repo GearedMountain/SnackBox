@@ -204,7 +204,7 @@ def upload_file():
 
 		# Store the file in the local server storage
 		global UPLOAD_FOLDER
-		print(str(result.fetchone()[0]))
+		print(f"ADDING IMAGE TO DATABASE FOR ENTRY: {str(result.fetchone()[0])}")
 		file_path = os.path.join(UPLOAD_FOLDER,str(result.fetchone()[0]))
 		file.save(file_path)
 		
