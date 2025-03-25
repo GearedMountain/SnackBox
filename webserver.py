@@ -201,12 +201,10 @@ def upload_file():
 	if file and allowed_file(file.filename): 
         # Read the image as binary data
 		result = db.session.execute(text("SELECT id FROM public.snacks WHERE name = :name"), {'name': snackname})
-		print(result.fetchone())
-        # Insert file info and binary photo into the PostgreSQL database using raw SQL with SQLAlchemy
 
 		# Store the file in the local server storage
 		global UPLOAD_FOLDER
-		file_path = os.path.join(UPLOAD_FOLDER, "1234")
+		file_path = os.path.join(UPLOAD_FOLDER, result.fetchone()[0])
 		file.save(file_path)
 		
         # Using db.session.execute() to run the raw SQL query
