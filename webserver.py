@@ -201,11 +201,11 @@ def upload_file():
 	if file and allowed_file(file.filename): 
         # Read the image as binary data
 		result = db.session.execute(text("SELECT id FROM public.snacks WHERE name = :name"), {'name': snackname})
-
+		fetched = result.fetchone()
 		# Store the file in the local server storage
 		global UPLOAD_FOLDER
-		print(f"ADDING IMAGE TO DATABASE FOR ENTRY: {str(result.fetchone()[0])}")
-		file_path = os.path.join(UPLOAD_FOLDER,str(result.fetchone()[0]))
+		print(f"ADDING IMAGE TO DATABASE FOR ENTRY: {str(fetched[0])}")
+		file_path = os.path.join(UPLOAD_FOLDER,str(fetched[0]))
 		file.save(file_path)
 		
         # Using db.session.execute() to run the raw SQL query
