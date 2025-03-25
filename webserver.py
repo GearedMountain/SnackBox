@@ -208,7 +208,11 @@ def upload_file():
             SET photo = :photo
             WHERE name = :name
         """)
-        
+
+		# Store the file in the local server storage
+		file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+		file.save(file_path)
+		
         # Using db.session.execute() to run the raw SQL query
 		db.session.execute(query, {'name': snackname, 'photo': photo_data})
 		db.session.commit()  # Commit the transaction to save the data in the database
