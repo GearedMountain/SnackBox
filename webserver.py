@@ -203,22 +203,22 @@ def upload_file():
         
         # Read the image as binary data
 		photo_data = file.read()
-
+		result = db.session.execute(text("SELECT id FROM public.snacks WHERE name = :name"), {'name': snackname})
         # Insert file info and binary photo into the PostgreSQL database using raw SQL with SQLAlchemy
 		query = text("""
             UPDATE public.snacks 
-            SET photo = :photo
+            SET photoname = :photo
             WHERE name = :name
         """)
-
+		db.session.execute(query, {'name': snackname, 'photo': result})
+		db.session.commit()  # Commit the transaction to save the data in the database
 		# Store the file in the local server storage
 		global UPLOAD_FOLDER
-		file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+		file_path = os.path.join(UPLOAD_FOLDER, result)
 		file.save(file_path)
 		
         # Using db.session.execute() to run the raw SQL query
-		db.session.execute(query, {'name': snackname, 'photo': photo_data})
-		db.session.commit()  # Commit the transaction to save the data in the database
+		
 		#socketio.emit('refresh_lobby', room=request.sid)
 		socketio.emit('update_snacklist',snacks)
 		
