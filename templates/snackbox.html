@@ -153,6 +153,7 @@
 				img.src = `/image/${data.snackSelected}`;
 				try{
 					document.getElementById("snackPhoto").classList.remove('hidden')
+					document.getElementById("snackPhoto").classList.add('block')
 					document.getElementById("snackPhoto").src = "/images/loading.gif"
 				} catch{
 					console.log("Showing loaded failed")
