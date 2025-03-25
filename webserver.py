@@ -331,6 +331,7 @@ def reset():
 # Static image return
 @app.route('/images/<filename>')
 def serve_image(filename):
+		print(f"Fetching image {filename}")
 		return send_from_directory('images',filename)
 
 @app.route('/styles/<filename>')
