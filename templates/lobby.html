@@ -187,6 +187,11 @@
 			window.location.href = '/snackbox';
 		});		
 
+		socket.on('refresh_lobby',function(data){
+			console.log(data.data)
+			window.location.href = '/';
+		});		
+		
 	
 
 		function autoSubmit() {

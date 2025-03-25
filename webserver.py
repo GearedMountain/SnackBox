@@ -212,7 +212,9 @@ def upload_file():
         # Using db.session.execute() to run the raw SQL query
 		db.session.execute(query, {'name': snackname, 'photo': photo_data})
 		db.session.commit()  # Commit the transaction to save the data in the database
+		socketio.emit('refresh_lobby', room=request.sid)
 		socketio.emit('update_snacklist',snacks)
+		
 
 		return render_template('lobby.html',username=session['user'])
 
