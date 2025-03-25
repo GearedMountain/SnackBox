@@ -46,7 +46,9 @@ playersRated = 0
 # Class for all game data
 availableRatings = {}
 
-
+# Make the upload folder if it doesnt exist 
+UPLOAD_FOLDER = 'uploads'  # Change this to your desired folder
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure folder exists
 
 def generate_random_id():
 	return str(random.randint(100000,999999))
@@ -210,6 +212,7 @@ def upload_file():
         """)
 
 		# Store the file in the local server storage
+		global UPLOAD_FOLDER
 		file_path = os.path.join(UPLOAD_FOLDER, file.filename)
 		file.save(file_path)
 		
@@ -346,7 +349,7 @@ def serve_style(filename):
 		return send_from_directory('styles',filename)
 
 if __name__ == '__main__':
-	if not os.path.exists(app.config['UPLOAD_FOLDER']):
-		os.makedirs(app.config['UPLOAD_FOLDER'])
+	#if not os.path.exists(app.config['UPLOAD_FOLDER']):
+	#	os.makedirs(app.config['UPLOAD_FOLDER'])
 
 	socketio.run(app, debug=True)
