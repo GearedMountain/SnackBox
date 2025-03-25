@@ -306,10 +306,11 @@ def socket_connected():
 
 @socketio.on('disconnect')
 def socket_disconnected():
-	username = session['user']
-	print (f"Player {username} leaving")
+	
 	#user = session.get('user')
 	if username in active_sessions:
+		username = session['user']
+		print (f"Player {username} leaving")
 		active_sessions.remove(username)
 	print (f" {username} Removed From Playerlist")	
 	emit('update_playerlist', {'playerlist': ":".join(active_sessions)}, broadcast=True)	
