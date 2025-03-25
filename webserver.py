@@ -204,7 +204,7 @@ def upload_file():
 
 		# Store the file in the local server storage
 		global UPLOAD_FOLDER
-		file_path = os.path.join(UPLOAD_FOLDER, result.fetchone()[0])
+		file_path = os.path.join(UPLOAD_FOLDER,str(result.fetchone()[0]))
 		file.save(file_path)
 		
         # Using db.session.execute() to run the raw SQL query
