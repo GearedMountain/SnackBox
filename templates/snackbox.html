@@ -96,7 +96,7 @@
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
 		</div>
 		<h2 id="myName" class="hidden"> Snackbox </h2>		
-		<div id="finalResult">
+		<div id="finalResult" class="hidden">
 
 		</div>
 		<div id="snackDisplay">
@@ -224,7 +224,7 @@
 				// If the image doesnt exist, remove the loading sign too
 				img.onerror = function() {
         			console.log("Image failed to load.");
-					document.getElementById("snackPhoto").src = ""
+					document.getElementById("snackPhoto").src = "/images/default.jpg"
 					document.getElementById("snackPhoto").classList.add('hidden')
 					document.getElementById("snackPhoto").classList.add('remove')
 
@@ -300,6 +300,8 @@
 		socket.on('snacks_finished', function(data) {
 			document.getElementById("selectedSnack").classList.add('hidden');
 			document.getElementById("messageList").innerHTML = ""
+			document.getElementById("finalResult").classList.remove('hidden');
+
 			const sortedArray = Object.entries(data).sort((a, b) => b[1] - a[1]);
 
 			const sortedDictionary = Object.fromEntries(sortedArray);
@@ -314,6 +316,7 @@
 			document.getElementById("NextSnackButton").classList.add('hidden')
 			result.innerHTML = name + " : " + score;
 			document.getElementById("finalResult").appendChild(result)
+
 
 			const snackDisplay = document.getElementById("snackDisplay");
 			if(snackDisplay){

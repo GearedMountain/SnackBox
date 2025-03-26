@@ -2,34 +2,42 @@
 	<link rel="stylesheet" href="styles/style.css">
 	<style>
 		body{
-			background-color:var(--accent-color);
+			background:var(--body-color);
 		}
 
 		main{
 			background-color:var(--base-color);
 			padding-bottom: 2vh;
-			border-bottom: 
-    #efcc39;
-	border-width: 0px;
-border-bottom-width: 8px;
-border-style:solid;
+			border-bottom: #efcc39;
+			border-width: 0px;
+			border-bottom-width: 8px;
+			border-style:solid;
 		}
 
 		.login-section{
 			height:auto;
 			color:var(--text-color);
 			transition: color .6s ease-in-out;
-			border-top: 
-    #efcc39;
-	border-width: 0px;
-border-top-width: 8px;
-border-style:solid;
+			border-top: #efcc39;
+			border-width: 0px;
+			border-top-width: 8px;
+			border-style:solid;
 
+		}
+
+		#changeLog h2{
+			text-align: left;
+			margin-left: 2.5vw;
+		}
+		#changeLog h3{
+			text-align: left;
+			margin-left: 5vw;
+			margin-right: 2.5vw;
 		}
 
 	</style>
 	
-	<body></body>
+	<body>
 		<main>
 		<div class="header">
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
@@ -52,6 +60,20 @@ border-style:solid;
 			<button type="submit">Upload</button>
 		</form>-->
 		</main>
+		<h1>Version 2.0 : Changelog</h1>
+		<div id="changeLog">
+			<h2>Fixed</h2>
+			<h3>- Game remembers state of player now, no more losing your vote from your phone sleeping</h3>
+			<h2>Added</h2>
+			<h3>- Added ability to upload images of the snack to display during voting</h3>
+			<h3>- Secret easter egg mode for a specific picky user</h3>
+			<h2>Misc (QOL)</h2>
+			<h3>- Nobody can continue onto the next snack until all players have voted</h3>
+			<h3>- Final results menu now sorted by the scores of each snack</h3>
+			<h3>- Minor UI changes such as double column voting buttons</h3>
+			<h3>- Default image selected if the snack doesnt have an image uploded</h3>
+
+		</div>
 	</body>	
 
 	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
@@ -81,6 +103,7 @@ border-style:solid;
 			SetLightMode();
 		}
 
+		SetDarkmode()
 		//Run this to set the page to darkmode by removing all lightmode modifiers
 		
 	</script>
