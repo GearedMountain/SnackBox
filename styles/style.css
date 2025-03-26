@@ -18,6 +18,13 @@ body{
     margin: 0px;
     
 }
+body.lightmode{
+    background-color:white;
+    color:black;
+    font-family: 'Franklin Gothic Demi Cond', sans-serif;
+    margin: 0px;
+    
+}
 
 .center{
     display: flex;
@@ -80,6 +87,15 @@ button {
     width:100%;
     height:10vh;
     background-color: black;
+}
+
+.header.lightmode{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:100%;
+    height:10vh;
+    background-color: white;
 }
 
 .pikenet-logo{

@@ -10,14 +10,19 @@
 			padding-bottom: 2vh;
 		}
 
+		main.lightmode{
+			background-color: #3fa9f5;
+		}
+
 		.login-section{
 			height:auto;
 		}
+
 	</style>
 	
-	<body>
-		<main>
-		<div class="header">
+	<body class="lightmode">
+		<main class="lightmode">
+		<div class="header lightmode">
 			<img src="images/PikeNetLogo.png" class="pikenet-logo">
 		</div>
 		<div class="login-section">
@@ -50,5 +55,13 @@
 			document.getElementById("current_playercount").innerHTML = data.current_playercount;
 		});
 		*/
+
+		function SetDarkmode()
+		{
+			document.querySelectorAll('.lightmode').forEach(el => el.classList.remove('lightmode'));
+		}
+
+		//Run this to set the page to darkmode by removing all lightmode modifiers
+		SetDarkmode();
 	</script>
 </html>
