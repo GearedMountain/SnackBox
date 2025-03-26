@@ -29,11 +29,13 @@
 			vertical-align: middle;
 		}
 		#snackPhoto{
-			width:50vw;
-			height:50vw;
-			margin-left:2.5vw;
+			width:30vw;
+			height:30vw;
+			margin-top: 2.5vw;
+			margin-left:auto;
+			border: black 10px solid;
 			border-radius: 30px;
- 			margin: auto;
+ 			
 		}
 
 		.hidden{
@@ -44,10 +46,33 @@
 			display: block;
 		}
 
+		#messageList{
+			margin-right: 2.5vw;
+
+			margin-left: 2.5vw;
+		}
+		#messageList h2{
+			margin: 0px;
+			padding-top: 1vw;
+			padding-bottom: 1vw;
+			color:var(--text-color);
+			border-width: 0px;
+			border-top-width: 10px;
+			border-color:var(--accent-color);
+			border-style: solid;
+		}
+
 		body{
 			overflow-y: hidden;
 			overscroll-behavior: none;
 
+		}
+
+		#NextSnackButton{
+			position: absolute;
+			bottom:5vw;
+			left:10vw;
+			width: 80vw;
 		}
 	</style>
 	<!--<div id="overlay" class="center" style="align-items: center;">
@@ -55,15 +80,25 @@
 		<img src="images/flag.png">
 	</div>-->
 	<body>
-		<h2 id="myName"> Snackbox </h2>		
+		<div class="header">
+			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
+		</div>
+		<h2 id="myName" class="hidden"> Snackbox </h2>		
 		<div id="finalResult">
 
 		</div>
+		<div id="snackDisplay">
+			<div>
+				<img id="snackPhoto" class="hidden">
+			</div >
+			<div style="width:auto">
+				<h1 id="selectedSnack" style="text-align: left;width: auto;">Select a Snack</h1>
+				<h2 class="hidden" id="SnackScoreParent" style="text-align: left;">Score: <span id="SnackScore">0</span></h2>
+			</div>
+		</div>
 		<div id="main-gui">
 			<div class="left-column">
-				<img id="snackPhoto" class="hidden">
-				<h1 id="selectedSnack">Select a Snack</h1>
-				<h1 class="hidden" id="SnackScoreParent">Score: <span id="SnackScore">0</span></h1>
+				
 				<div id="messageList">
 
 				</div>
@@ -195,7 +230,7 @@
 					document.getElementById("main-gui").classList.remove("expanded");
 				}
 				snackScore += parseInt(value[1])
-				AddLogLocal(key + " rated " + value[0] + " a " + value[1], snackScore)
+				AddLogLocal(key + " rated " + value[1], snackScore)
 				console.log(key + " rated " + value[0] + " a " + value[1]) 
 			});
 
@@ -277,6 +312,24 @@
 			socket.emit('snack_selected', { id:ID });
 		}
 
-		
+		function SetDarkmode()
+		{
+			document.body.classList.remove('lightmode');
+			localStorage.setItem('display', 'dark');
+			document.getElementById("pikenetLogo").src = "images/PikeNetLogo.png"
+
+		}
+
+		function SetLightMode()
+		{
+			document.body.classList.add('lightmode');
+			localStorage.setItem('display', 'light');
+			document.getElementById("pikenetLogo").src = "images/PikeMomLogo.png"
+
+		}
+
+		if(localStorage.getItem('display') === "light"){
+			SetLightMode();
+		}
 	</script>
 </html>

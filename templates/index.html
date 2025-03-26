@@ -32,7 +32,7 @@ border-style:solid;
 	<body></body>
 		<main>
 		<div class="header">
-			<img src="images/PikeNetLogo.png" class="pikenet-logo">
+			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
 		</div>
 		<div class="login-section">
 			<h1>Welcome, Please Choose a Unique Username</h1>
@@ -68,12 +68,17 @@ border-style:solid;
 		function SetDarkmode()
 		{
 			document.body.classList.remove('lightmode');
+			localStorage.setItem('display', 'dark');
 		}
 
 		function SetLightMode()
 		{
 			document.body.classList.add('lightmode');
+			localStorage.setItem('display', 'light');
+		}
 
+		if(localStorage.getItem('display') === "light"){
+			SetLightMode();
 		}
 
 		//Run this to set the page to darkmode by removing all lightmode modifiers

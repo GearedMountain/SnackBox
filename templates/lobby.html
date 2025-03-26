@@ -15,9 +15,12 @@
 		
 		#add_snack{
 			margin-bottom: 2vh;
-			background-color: #3fa9f5;
+			
 		}
-
+		.header{
+			border-bottom-left-radius: 60px;
+   			border-bottom-right-radius: 60px;
+		}
 		.new-snack-grid{
 			display: grid;
 			grid-template-columns: auto 10vw; /* Two equal columns */
@@ -41,6 +44,9 @@
 	</style>
 	
 	<body class="center">
+		<div class="header">
+			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
+		</div>
 		<h1>Add Snacks</h1>
 		<!--<h1>{{ username }}</h1>-->
 		<form action="/start_game" method="POST">
@@ -192,12 +198,35 @@
 			window.location.href = '/';
 		});		
 		
-	
+		socket.on('whats_my_name', function(data) {
+				if(data == "mom" || data=="Mom"){
+					SetLightMode()
+				}
+		});
 
 		function autoSubmit() {
             // Trigger the form submission when the file is selected
             document.getElementById('uploadForm').submit();
         }
 
+		function SetDarkmode()
+		{
+			document.body.classList.remove('lightmode');
+			localStorage.setItem('display', 'dark');
+			document.getElementById("pikenetLogo").src = "images/PikeNetLogo.png"
+
+		}
+
+		function SetLightMode()
+		{
+			document.body.classList.add('lightmode');
+			localStorage.setItem('display', 'light');
+			document.getElementById("pikenetLogo").src = "images/PikeMomLogo.png"
+
+		}
+
+		if(localStorage.getItem('display') === "light"){
+			SetLightMode();
+		}
 	</script>
 </html>

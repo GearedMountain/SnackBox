@@ -11,19 +11,26 @@
 }
 
 :root{
+    --body-color: #1a1e2b;
     --base-color: #163e63;
     --text-color: white;
-    --accent-color: black;
+    --accent-color: #3fa9f5;
     --dark-accent-color: #2f80ba;
     --header-color:black;
+
+    --button-color:#2f80ba;
+    --button-accent:#3fa9f5;
 }
 .lightmode{
     --base-color: white;
-    --text-color: #1a1e2b;
-    --accent-color: #3fa9f5;
+    --text-color: #2c241c;
+    --accent-color: #f15483;
     --dark-accent-color: #2f80ba;
-    --header-color:white;
+    --header-color:#F5B8C5;
+    --body-color:linear-gradient(20deg, #ff9a9e, #fad0c4, white, #ffdde1);;
 
+    --button-color:#f15483;
+    --button-accent:#940242;
 }
 
 * {
@@ -31,8 +38,8 @@
 
 }
 body{
-    background-color:#1a1e2b;
-    color:white;
+    background:var(--body-color);
+    color:var(--text-color);
     font-family: 'Franklin Gothic Demi Cond', sans-serif;
     margin: 0px;
 
@@ -46,11 +53,13 @@ body{
 }
 
 h1{
+    
     width:100%;
     text-align: center;
     font-size:4rem;
 }
 h2{
+    font-family: 'Franklin Gothic Medium Cond', sans-serif;
     width:100%;
     text-align: center;
     font-size:3rem;
@@ -62,7 +71,7 @@ input{
     width:80vw;
     font-family: 'Franklin Gothic Medium Cond', sans-serif;
     border-radius: 30px;
-    background-color:#2f80ba;
+    background-color:var(--button-color);
     border-color: #3fa9f5;
     border-width: 0px;
     padding-left: 2rem;
@@ -82,9 +91,13 @@ button {
     font-size:3rem;
     height: 5vh;
     width:80vw;
-    background-color: #2f80ba;
+    background-color: var(--button-color);
     color:white;
-    box-shadow: 10px 10px #3fa9f5;
+    transition: box-shadow .6s ease-in-out,
+                background-color .6s ease-in-out;
+ 
+
+    box-shadow: 10px 10px var(--button-accent);
     font-family: "Consolas", monospace;
     font-weight: bold;
 }
@@ -94,24 +107,23 @@ button {
 }
 
 .header{
-    
-
     display: flex;
     align-items: center;
     justify-content: center;
     width:100%;
     height:10vh;
-    background-color: var(--header-color);
+    background: var(--header-color);
 }
 
 
 .pikenet-logo{
     height:8vh;
-    fill:blue;
+    
 }
 
 
 #main-gui{
+    margin-top: 2.5vw;
     display: grid;
     grid-template-columns: 100vw 0vw; /* Two equal columns */
     gap: 20px;
@@ -125,6 +137,20 @@ button {
 #main-gui.expanded {
     grid-template-columns: 60vw 40vw; /* Both columns equal */
     
+}
+
+#snackDisplay{
+    display: grid;
+    background:var(--header-color);
+    color:var(--text-color);
+    grid-template-columns:auto auto; /* Two equal columns */
+    gap: 20px;
+    border-bottom-left-radius: 60px;
+    border-bottom-right-radius: 60px;
+   /* transition: grid-template-columns 1s ease-in-out;*/
+    width: auto;
+    height: 35vw;
+    padding-bottom: 30px;
 }
 
 .right-column {
@@ -145,7 +171,7 @@ button {
     height:16vw;
     width:16vw;
     border-radius: 30px;
-    box-shadow: 0px 0px #3fa9f5;
+    
 }
 
 .left-column button{
