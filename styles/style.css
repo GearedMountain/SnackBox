@@ -10,21 +10,34 @@
          
 }
 
+:root{
+    --base-color: #163e63;
+    --text-color: white;
+    --accent-color: black;
+    --dark-accent-color: #2f80ba;
+    --header-color:black;
+}
+.lightmode{
+    --base-color: white;
+    --text-color: #1a1e2b;
+    --accent-color: #3fa9f5;
+    --dark-accent-color: #2f80ba;
+    --header-color:white;
 
+}
+
+* {
+    transition: background-color .6s ease-in-out;
+
+}
 body{
     background-color:#1a1e2b;
     color:white;
     font-family: 'Franklin Gothic Demi Cond', sans-serif;
     margin: 0px;
-    
+
 }
-body.lightmode{
-    background-color:white;
-    color:black;
-    font-family: 'Franklin Gothic Demi Cond', sans-serif;
-    margin: 0px;
-    
-}
+
 
 .center{
     display: flex;
@@ -81,26 +94,22 @@ button {
 }
 
 .header{
+    
+
     display: flex;
     align-items: center;
     justify-content: center;
     width:100%;
     height:10vh;
-    background-color: black;
+    background-color: var(--header-color);
 }
 
-.header.lightmode{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width:100%;
-    height:10vh;
-    background-color: white;
-}
 
 .pikenet-logo{
     height:8vh;
+    fill:blue;
 }
+
 
 #main-gui{
     display: grid;
