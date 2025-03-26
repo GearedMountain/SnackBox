@@ -115,7 +115,7 @@ def snack_rated(data):
 		print("ALL PLAYERS HAVE VOTED")
 		emit('all_players_voted',broadcast=True)
 	rating = int(data['rating'])
-	logMessage = f"{session['user']} rated {currentlyRating} a {data['rating']}"
+	logMessage = f"{session['user']} rated {data['rating']}"
 	availableRatings[session['user']][rating-1] = 0
 	print ( availableRatings[session['user']] )
 	ratedSnacks[currentlyRating] += int(data['rating'])
@@ -158,6 +158,8 @@ def change_snack(data):
 		db.session.execute(query, {'snackname': data['newName'],'oldname': oldname})  
 		result = db.session.commit()
 		snacks[int(data['id'])] = data['newName']
+		emit('update_snacklist',snacks,broadcast=True)
+
 	except:
 		print("Name change failed")
 	#emit('update_snacklist',snacks,broadcast=True)
@@ -271,6 +273,7 @@ def socket_connected():
 	global currentlyRating
 	global playersRated
 	global playerCount
+	global snacks
 
 	socketio.emit('whats_my_name',session['user'], room=request.sid)
 	if gameStarted:
@@ -304,6 +307,10 @@ def socket_connected():
 	print (f"Client Joined, current count: {len(active_sessions)}")
 	emit('update_playerlist', {'playerlist': ":".join(active_sessions)}, broadcast=True)
 	emit('update_snacklist',snacks)
+
+	if len(snacks) == 0 :
+		emit('snacks_finished',ratedSnacks,room=request.sid)
+
 
 
 @socketio.on('disconnect')

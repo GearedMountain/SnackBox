@@ -28,6 +28,7 @@
 			color:white;
 			vertical-align: middle;
 		}
+
 		#snackPhoto{
 			width:30vw;
 			height:30vw;
@@ -66,6 +67,17 @@
 			overflow-y: hidden;
 			overscroll-behavior: none;
 
+		}
+
+		#finalResult{
+			background-color:var(--header-color);
+			border-bottom-left-radius: 60px;
+   			border-bottom-right-radius: 60px;
+			padding-bottom: 2rem;
+		}
+
+		#finalResult h2{
+			margin:0px;
 		}
 
 		#NextSnackButton{
@@ -288,7 +300,10 @@
 		socket.on('snacks_finished', function(data) {
 			document.getElementById("selectedSnack").classList.add('hidden');
 			document.getElementById("messageList").innerHTML = ""
-			Object.entries(data).forEach(([key, value]) => {
+			const sortedArray = Object.entries(data).sort((a, b) => b[1] - a[1]);
+
+			const sortedDictionary = Object.fromEntries(sortedArray);
+			Object.entries(sortedDictionary).forEach(([key, value]) => {
 				FinalResults(key, value)
 			});
 			
@@ -299,6 +314,12 @@
 			document.getElementById("NextSnackButton").classList.add('hidden')
 			result.innerHTML = name + " : " + score;
 			document.getElementById("finalResult").appendChild(result)
+
+			const snackDisplay = document.getElementById("snackDisplay");
+			if(snackDisplay){
+				snackDisplay.remove();
+			}
+			
 
 		}
 

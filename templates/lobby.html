@@ -41,6 +41,16 @@
 			background-color:red;
 		}
 
+		#loading{
+			position: fixed;
+			height: 100%;
+			width: 100%;
+			top:0px;
+			background-color: black;
+			color:white;
+			vertical-align: middle;
+		}
+
 	</style>
 	
 	<body class="center">
@@ -75,7 +85,9 @@
 			<input  type="file" id="file" name="file" accept="image/*" onchange="autoSubmit()">
 			<input  type="text" id="snackname" name="snackname" accept="text">
 		</form>
-		
+		<div id="loading">
+			<h1 style="position:fixed;top:45%;vertical-align: middle;">Loading...</h1>
+		</div>
 	</body>	
 
 	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
@@ -171,6 +183,12 @@
 			});
 			bottomportion = document.getElementById("bottom-portion");
     		bottomportion.scrollTop = bottomportion.scrollHeight;
+			try{
+				document.getElementById("loading").remove();
+			}
+			catch{
+
+			}
 		});
 		
 		socket.on('update_playerlist', function(data) {
