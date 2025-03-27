@@ -92,6 +92,14 @@
 		<img src="images/flag.png">
 	</div>-->
 	<body>
+		<!-- Audio Clips -->
+		<audio id="toiletFlush" src="sounds/toilet_flush.mp3"></audio>
+
+		<!--
+		<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">Play Sound</button>
+		-->
+
+
 		<div class="header">
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
 		</div>
@@ -350,6 +358,12 @@
 			localStorage.setItem('display', 'light');
 			document.getElementById("pikenetLogo").src = "images/PikeMomLogo.png"
 
+		}
+
+		function PlaySound(name)
+		{
+			console.log("Find sound " + name)
+			document.getElementById(name).play()
 		}
 
 		if(localStorage.getItem('display') === "light"){

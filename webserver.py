@@ -343,6 +343,11 @@ def serve_image(filename):
 		print(f"Fetching image {filename}")
 		return send_from_directory('images',filename)
 
+@app.route('/sounds/<filename>')
+def serve_sound(filename):
+		print(f"Fetching sound {filename}")
+		return send_from_directory('sounds',filename)
+
 @app.route('/styles/<filename>')
 def serve_style(filename):
 		return send_from_directory('styles',filename)
