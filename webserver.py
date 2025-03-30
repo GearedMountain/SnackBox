@@ -25,140 +25,148 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 db = SQLAlchemy(app)
 
 # GAME VARIABLES
-gameStarted = False
+GAMESTARTED = False
 
 # Setup up SocketIO
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Track users sessions in memory
-active_sessions = set()
-snackCount = 0
-snacks = {}
-ratedSnacks = {}
-ratingLogs = {}
+SET_ACTIVESESSIONS = set()
+SNACKCOUNT = 0
+DICT_SNACKS = {}
+DICT_RATEDSNACKS = {}
+DICT_RATINGLOGS = {}
 
 # Name of the snack currently rating, set to 0 when finished for logic to see if still rating
-currentlyRating = 0
+CURRENTLYRATING = 0
 
-# Playercount for votes expected, playersrated for how many have casted
-playerCount = 0
-playersRated = 0
+# PLAYERCOUNT for votes expected, PLAYERSRATED for how many have casted
+PLAYERCOUNT = 0
+PLAYERSRATED = 0
 # Class for all game data
-availableRatings = {}
+AVAILABLERATINGS = {}
 
 # Make the upload folder if it doesnt exist 
 UPLOAD_FOLDER = 'uploads'  # Change this to your desired folder
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure folder exists
 
+# SUPPORTING FUNCTIONS
 def generate_random_id():
 	return str(random.randint(100000,999999))
 
+# USER ENTERS WEBSITE
+@app.route('/')
+def index():
+	if 'user' in session:
+		print ("session already created")
+		return render_template('lobby.html',username=session['user'])
+	else:
+		return render_template('index.html')
+
 @app.route('/start_game',methods=['POST'])
 def start_game():
-	global gameStarted
-	global availableRatings
-	global playerCount
-	playerCount = 0
-	gameStarted = True
+	global GAMESTARTED
+	global AVAILABLERATINGS
+	global PLAYERCOUNT
+	PLAYERCOUNT = 0
+	GAMESTARTED = True
 	print ("initializing game")
-	for i in active_sessions:
-		availableRatings[i] = [0] * snackCount
-		playerCount += 1
-		for j in range(snackCount):
-			availableRatings[i][j] = j+1
-		print(availableRatings[i])
+	for i in SET_ACTIVESESSIONS:
+		AVAILABLERATINGS[i] = [0] * SNACKCOUNT
+		PLAYERCOUNT += 1
+		for j in range(SNACKCOUNT):
+			AVAILABLERATINGS[i][j] = j+1
+		print(AVAILABLERATINGS[i])
 		
-	print(f"Game Playercount: {playerCount}")
+	print(f"Game PLAYERCOUNT: {PLAYERCOUNT}")
 	
 	socketio.emit('start_game',{'data':True})	
 
 	
-	#emit('update_playerlist', {'playerlist': ":".join(active_sessions)}, broadcast=True)
+	#emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)
 	
 	return render_template('snackbox.html')
 	
 
 @app.route('/snackbox')
 def snackbox():
-	global gameStarted
-	if gameStarted:
+	global GAMESTARTED
+	if GAMESTARTED:
 		return render_template('snackbox.html')
 	else:
 		return "game hasn't started"
 	
 @socketio.on('next_snack')
 def next_snack(data):
-	global ratedSnacks
-	global currentlyRating 
-	global playersRated
-	playersRated = 0
-	currentlyRating = 0
-	if len(snacks) == 0 :
-		emit('snacks_finished',ratedSnacks,broadcast=True)
+	global DICT_RATEDSNACKS
+	global CURRENTLYRATING 
+	global PLAYERSRATED
+	PLAYERSRATED = 0
+	CURRENTLYRATING = 0
+	if len(DICT_SNACKS) == 0 :
+		emit('snacks_finished',DICT_RATEDSNACKS,broadcast=True)
 
 	else:
-		emit('update_snacklist',snacks,broadcast=True)
-		emit('next_snack_server',snacks,broadcast=True)
-		#emit('update_available_ratings',{'availableRating':availableRatings[session['user']]})	
-
+		emit('update_snacklist',DICT_SNACKS,broadcast=True)
+		emit('next_snack_server',DICT_SNACKS,broadcast=True)
 
 @socketio.on('snack_rated')
 def snack_rated(data):
-	global availableRatings
-	global ratingLogs
-	global playersRated
-	global playerCount
+	global AVAILABLERATINGS
+	global DICT_RATINGLOGS
+	global PLAYERSRATED
+	global PLAYERCOUNT
 
-	playersRated += 1
+	PLAYERSRATED += 1
 
-	if playersRated == playerCount:
+	if PLAYERSRATED == PLAYERCOUNT:
 		print("ALL PLAYERS HAVE VOTED")
 		emit('all_players_voted',broadcast=True)
 	rating = int(data['rating'])
 	logMessage = f"{session['user']} rated {data['rating']}"
-	availableRatings[session['user']][rating-1] = 0
-	print ( availableRatings[session['user']] )
-	ratedSnacks[currentlyRating] += int(data['rating'])
+	AVAILABLERATINGS[session['user']][rating-1] = 0
+	print ( AVAILABLERATINGS[session['user']] )
+	DICT_RATEDSNACKS[CURRENTLYRATING] += int(data['rating'])
 
-	ratingLogs[session['user']] = [currentlyRating, data['rating']]
-	emit('snack_rated_server',{ 'message' : logMessage, 'snacksRating' : ratedSnacks[currentlyRating]},broadcast=True)
-	emit('update_available_ratings',{'availableRatings':availableRatings[session['user']]})	
-	emit('update_rating_logs',ratingLogs)
+	DICT_RATINGLOGS[session['user']] = [CURRENTLYRATING, data['rating']]
+	emit('snack_rated_server',{ 'message' : logMessage, 'snacksRating' : DICT_RATEDSNACKS[CURRENTLYRATING]},broadcast=True)
+	emit('update_available_ratings',{'AVAILABLERATINGS':AVAILABLERATINGS[session['user']]})	
+	emit('update_rating_logs',DICT_RATINGLOGS)
 
 @socketio.on('snack_selected')
 def snack_selected(data):
-	global snacks
-	global currentlyRating
-	global ratedSnacks
-	global ratingLogs
-	global playersRated
-	playersRated = 0
-	ratingLogs = {}
+	global DICT_SNACKS
+	global CURRENTLYRATING
+	global DICT_RATEDSNACKS
+	global DICT_RATINGLOGS
+	global PLAYERSRATED
+	PLAYERSRATED = 0
+	DICT_RATINGLOGS = {}
 
 	selected = data['id']
-	selectedName = snacks[int(selected)]
-	currentlyRating = selectedName
-	ratedSnacks[currentlyRating] = 0
+	selectedName = DICT_SNACKS[int(selected)]
+	CURRENTLYRATING = selectedName
+	DICT_RATEDSNACKS[CURRENTLYRATING] = 0
+	pop = DICT_SNACKS.pop(int(selected))
+	
 	print(f"Snack selected: {selectedName}" )
-	pop = snacks.pop(int(selected))
-	# = data['ID']
 	emit('snack_selected_server', {'snackSelected' : selectedName} ,broadcast=True)
-	emit('update_snacklist',snacks,broadcast=True)
+	emit('update_snacklist',DICT_SNACKS,broadcast=True)
 
 
 @socketio.on('snack_updated')
 def change_snack(data):
-	global snacks
+	global DICT_SNACKS
 	
 
 	try:
-		oldname = snacks[int(data['id'])]
+		oldname = DICT_SNACKS[int(data['id'])]
 		print(f'snack {oldname} updated')
 		query = text('UPDATE public.snacks SET name = :snackname WHERE name = :oldname')
 		db.session.execute(query, {'snackname': data['newName'],'oldname': oldname})  
 		result = db.session.commit()
-		snacks[int(data['id'])] = data['newName']
-		emit('update_snacklist',snacks,broadcast=True)
+		DICT_SNACKS[int(data['id'])] = data['newName']
+		emit('update_snacklist',DICT_SNACKS,broadcast=True)
 
 	except:
 		print("Name change failed")
@@ -166,8 +174,8 @@ def change_snack(data):
 
 @socketio.on('snack_added')
 def add_snack(data):
-	global snackCount
-	global snacks
+	global SNACKCOUNT
+	global DICT_SNACKS
 	global sessionId
 		
 	try:
@@ -175,15 +183,15 @@ def add_snack(data):
 		db.session.execute(query, {'snackname': data['name'],'sessionId': sessionId})  
 		result = db.session.commit()
 
-		snackCount += 1
-		print (f"received snack: {data['name']} for a total of {snackCount}" )
-		snacks[snackCount] = data['name']
+		SNACKCOUNT += 1
+		print (f"received snack: {data['name']} for a total of {SNACKCOUNT}" )
+		DICT_SNACKS[SNACKCOUNT] = data['name']
 	except:
 		print("snack already exists")
 	
 	# Add snack to database
 	
-	emit('update_snacklist',snacks,broadcast=True)
+	emit('update_snacklist',DICT_SNACKS,broadcast=True)
 
 
 
@@ -213,7 +221,7 @@ def upload_file():
         # Using db.session.execute() to run the raw SQL query
 		
 		#socketio.emit('refresh_lobby', room=request.sid)
-		socketio.emit('update_snacklist',snacks)
+		socketio.emit('update_snacklist',DICT_SNACKS)
 		
 	return Response(status=302, headers={"Location": "/"})
 
@@ -243,19 +251,8 @@ def get_image(snackname):
 	finally:
 		print("finished")
 
-@app.route('/')
-def index():
-#	if 'user_id' not in session:
-#		session['user_id'] = generate_random_id()
-#		active_sessions.add(session['user_id'])	
-#		print ("New Player ID Created")
-	if 'user' in session:
-		print ("session already created")
-		return render_template('lobby.html',username=session['user'])
-	else:
-		return render_template('index.html')
 
-# Receive users username they choose
+# USERS SELECT THEIR USERNAME : TO BE USED BY GUESTS ONLY ONCE IMPLEMENTED
 @app.route('/submit_username', methods=['POST'])
 def username_selected():
 	if 'user' not in session:
@@ -266,51 +263,40 @@ def username_selected():
 		print ("user already has session")
 	return render_template('lobby.html', username=session['user'])
 
+# CONNECT & DISCONNECT STATEMENTS
 @socketio.on('connect')
 def socket_connected():
-	global gameStarted
-	global ratingLogs
-	global currentlyRating
-	global playersRated
-	global playerCount
-	global snacks
-
+	global GAMESTARTED
+	global DICT_RATINGLOGS
+	global CURRENTLYRATING
+	global PLAYERSRATED
+	global PLAYERCOUNT
+	global DICT_SNACKS
+	global AVAILABLERATINGS
+	
 	socketio.emit('whats_my_name',session['user'], room=request.sid)
-	if gameStarted:
-		if currentlyRating != 0:
-			socketio.emit('snack_selected_server', {'snackSelected' : currentlyRating}, room=request.sid)
-			socketio.emit('update_rating_logs',ratingLogs, room=request.sid)
-		if playersRated == playerCount:
+	if GAMESTARTED:
+		if CURRENTLYRATING != 0:
+			socketio.emit('snack_selected_server', {'snackSelected' : CURRENTLYRATING}, room=request.sid)
+			socketio.emit('update_rating_logs',DICT_RATINGLOGS, room=request.sid)
+		if PLAYERSRATED == PLAYERCOUNT:
 			# If everyone has voted, give relog the next snack button if lost
 			socketio.emit('all_players_voted', room=request.sid)
 			
-		print(availableRatings[session['user']])
+		print(AVAILABLERATINGS[session['user']])
 
 		
-		socketio.emit('update_available_ratings',{'availableRatings':availableRatings[session['user']]}, room=request.sid)	
+		socketio.emit('update_available_ratings',{'AVAILABLERATINGS':AVAILABLERATINGS[session['user']]}, room=request.sid)	
 	
 	if 'user' in session:
 		username = session['user']
-		active_sessions.add(username)
-	print (session['user'])
-	#result = db.session.execute(text('SELECT * FROM public."users" WHERE "username" = :username'), {'username': session['user']})
+		SET_ACTIVESESSIONS.add(username)
+	print (f"Client Joined, current count: {len(SET_ACTIVESESSIONS)}")
+	emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)
+	emit('update_snacklist',DICT_SNACKS)
 
-	#user = result.fetchone()
-
-	#if user:
-	#	print (f"{user[1]} has user id: {user[0]}")
-	#else:
-	#	print ("user not found")
-    # Check if the user was found
-    
-
-	print (f"Client Joined, current count: {len(active_sessions)}")
-	emit('update_playerlist', {'playerlist': ":".join(active_sessions)}, broadcast=True)
-	emit('update_snacklist',snacks)
-
-	if len(snacks) == 0 :
-		emit('snacks_finished',ratedSnacks,room=request.sid)
-
+	if len(DICT_SNACKS) == 0 :
+		emit('snacks_finished',DICT_RATEDSNACKS,room=request.sid)
 
 
 @socketio.on('disconnect')
@@ -318,26 +304,24 @@ def socket_disconnected():
 	try:
 		username = session['user']
 	#user = session.get('user')
-		if username in active_sessions:
+		if username in SET_ACTIVESESSIONS:
 		
 			print (f"Player {username} leaving")
-			active_sessions.remove(username)
+			SET_ACTIVESESSIONS.remove(username)
 		print (f" {username} Removed From Playerlist")	
 	except:
 		print("disconnected user failed")
+	emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)	
 
-	emit('update_playerlist', {'playerlist': ":".join(active_sessions)}, broadcast=True)	
-
-	#session.pop(username,None)
-
+# DELETE AFTER IMPLEMENTED PROPERLY
 @app.route('/reset')
 def reset():
 	session.clear()
-	active_sessions.clear()
+	SET_ACTIVESESSIONS.clear()
 	print ("reset")
 	return "reset"
 
-# Static image return
+# STATIC LOCATION RETURN
 @app.route('/images/<filename>')
 def serve_image(filename):
 		print(f"Fetching image {filename}")
@@ -353,7 +337,23 @@ def serve_style(filename):
 		return send_from_directory('styles',filename)
 
 if __name__ == '__main__':
-	#if not os.path.exists(app.config['UPLOAD_FOLDER']):
-	#	os.makedirs(app.config['UPLOAD_FOLDER'])
+	socketio.run(app)
 
-	socketio.run(app, debug=True)
+
+### Documentation for naming schemes
+
+
+## Javascript / Python
+# Function Names : FirstSecond()
+# Local Variables : firstSecond
+# Arrays : arr_firstSecond 
+# Lists : list_firstSecond
+# Dictionaries : dict_firstSecond
+# Global Variables : FIRSTSECOND (caps everything in the name including ARR_FIRSTSECOND)
+
+
+## HTML 
+# Element ID : firstSecond
+
+## CSS
+# Class Name : first-second

@@ -167,10 +167,10 @@
 		socket.on('update_available_ratings', function(data) {
 			document.getElementById('right-column');
 			//availableRatings = JSON.parse(data.availableRating)
-			console.log("ratings : " + data["availableRatings"])
+			console.log("ratings : " + data["AVAILABLERATINGS"])
 
 			document.getElementById("right-column").innerHTML = '';
-			data["availableRatings"].forEach(function(item) {
+			data["AVAILABLERATINGS"].forEach(function(item) {
 				if(item !== 0)
 				{
 					let RatingButton = document.createElement("button");
@@ -189,7 +189,8 @@
 			});
 		})
 		socket.on('update_snacklist', function(data) {
-			console.log(data)
+			console.log("boutta update the snacklist")
+			console.log("snacklist:" + data)
 			snacklist.innerHTML = '';
 			SnackCount = 0;
 			Object.entries(data).forEach(([key, value]) => {
