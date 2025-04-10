@@ -1,4 +1,4 @@
-countryName = "Columbia"
+countryName = "Netherlands"
 from datetime import datetime
 
 current_year = datetime.now().year
@@ -50,6 +50,16 @@ AVAILABLERATINGS = {}
 UPLOAD_FOLDER = 'uploads'  # Change this to your desired folder
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure folder exists
 
+# Grab all current snacks from the database using the current session ID
+with app.app_context():
+	result = db.session.execute(text('SELECT * FROM public.snacks WHERE "sessionId" = :sessionId'), {'sessionId' : sessionId})
+	print(f'HERE IS THE CURRENT POOL {result}')
+	for row in result:
+		id = row.id
+		SNACKCOUNT += 1
+		DICT_SNACKS[row.id] = row.name
+		print(DICT_SNACKS) 
+
 # SUPPORTING FUNCTIONS
 def generate_random_id():
 	return str(random.randint(100000,999999))
@@ -57,6 +67,7 @@ def generate_random_id():
 # USER ENTERS WEBSITE
 @app.route('/')
 def index():
+	
 	if 'user' in session:
 		print ("session already created")
 		return render_template('lobby.html',username=session['user'])

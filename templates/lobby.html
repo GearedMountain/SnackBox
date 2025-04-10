@@ -104,10 +104,10 @@
 		const playerlist = document.getElementById('playerlist');
 		const snacklist = document.getElementById('snacklist');
 		
-		function AddSnackLocal(SnackName){
+		function AddSnackLocal(SnackId, SnackName){
 			SnackCount += 1;
 			const newSnackInput = document.createElement('input');
-			newSnackInput.id = "snack-" + SnackCount;
+			newSnackInput.id = "snack-" + SnackId;
 			newSnackInput.value = SnackName;
 
 			// Check to see if this snack has an image
@@ -182,7 +182,7 @@
 			snacklist.innerHTML = '';
 			SnackCount = 0;
 			Object.entries(data).forEach(([key, value]) => {
-				AddSnackLocal(value)
+				AddSnackLocal(key, value)
 			});
 			bottomportion = document.getElementById("bottom-portion");
     		bottomportion.scrollTop = bottomportion.scrollHeight;
