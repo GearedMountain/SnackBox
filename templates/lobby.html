@@ -5,16 +5,14 @@
 			background: var(--base-color);
 		}
 		#top-portion{
-			width:100vw;
-			height:28vh;
+			width:80vw;
+			height:auto;
 			overflow-x:scroll;
-			background-color: var( --body-color);
-
-			border-color: var(--border-accent);
-			border-width: 0px;
-			border-style:solid;
-			border-bottom-width: 8px;
-			border-top-width: 8px;
+			margin-top:3vh;
+			background-color:var(--body-color);
+			border-radius: 60px;
+			padding: 2vh;
+			margin-bottom: 3vh;
 		}
 
 		#bottom-portion{
@@ -30,6 +28,8 @@
 		.header{
 			border-bottom-left-radius: 60px;
    			border-bottom-right-radius: 60px;
+			
+			
 		}
 		.new-snack-grid{
 			display: grid;
@@ -49,7 +49,7 @@
 		}
 		
 		.no-image{
-			background-color:red;
+			background-color:#ef4565;
 
 
 		}
@@ -64,20 +64,44 @@
 			vertical-align: middle;
 		}
 
+		#startGameButton{
+			margin-top: 0vh;
+			margin-bottom: 0vh;
+		}
+
+		#playerlist{
+			width:100%;
+		}
+
+		#playerlist h4{
+			font-size: 3rem;
+			margin:0px;
+			width:100%;
+			padding:1rem;
+			border-radius: 60px;
+			background-color:none;
+			transition: background-color 4 ease-in-out;
+			/*background: var(--dark-accent-color);*/
+		}
+
+		#playerlist .revealed{
+			background-color:none !important;
+		}
 	</style>
 	
 	<body class="center">
 		<div class="header">
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
 		</div>
+
 		<!--<h1>{{ username }}</h1>-->
 		<form action="/start_game" method="POST">
-			<button type="submit">Start Game</button>
+			<button id="startGameButton" type="submit">Start Game</button>
 		</form>		
-		
+
 				
 		<div id="top-portion" class="center">
-			<h2 style="margin-bottom: 0px;">Joined:</h2>
+			<h2 style="margin-bottom: 0px;margin-top: 0px;">Joined:</h2>
 			<div id="playerlist"></div>
 		</div>
 		<input id="add_snack" placeholder="Snack Name"></input>
@@ -211,9 +235,10 @@
 			const playerlistArr = data.playerlist.split(':');
 
 			playerlistArr.forEach(item => {
-				const h2 = document.createElement('h2');
-				h2.textContent = item;
-				playerlist.appendChild(h2);
+				const h4 = document.createElement('h4');
+				h4.textContent = item;
+				playerlist.appendChild(h4);
+				h4.classList.add("revealed");
 			});
 			
 			console.log("upated list " + data.playerlist)

@@ -11,16 +11,16 @@
 }
 
 :root{
-    --body-color: #1a1e2b;
-    --base-color: #163e63;
+    --body-color: #171e26;
+    --base-color: #101114;
     --text-color: white;
-    --accent-color: #3fa9f5;
-    --dark-accent-color: #2f80ba;
-    --header-color:black;
+    --accent-color: #5898ad;
+    --dark-accent-color: #22343a;
+    --header-color:#101114;
 
-    --border-accent:#efcc39;
-    --button-color:#2f80ba;
-    --button-accent:#3fa9f5;
+    --border-accent:#5898ad;
+    --button-color:#5898ad;
+    --button-accent:#3e6673;
 }
 .lightmode{
     --base-color: white;
@@ -36,7 +36,7 @@
 
 * {
     transition: background-color .6s ease-in-out;
-
+    box-sizing: border-box
 }
 body{
     background:var(--body-color);
@@ -46,6 +46,11 @@ body{
 
 }
 
+.section-seperate{
+    width: 90%;
+    height: 5px;
+    background-color: var(--accent-color);
+}
 
 .center{
     display: flex;
