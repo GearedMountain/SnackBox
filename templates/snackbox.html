@@ -89,6 +89,29 @@
 			left:10vw;
 			width: 80vw;
 		}
+		#soundBoardParent{
+			width:100%;
+			display: flex;
+			align-items: center;
+		}
+		#soundBoard{
+			width:100%;
+ 		 	display: flex;
+			align-items: center;
+			text-align: center;
+  			flex-direction: row; /* This makes the items go left to right */
+		}	
+
+		#soundBoard button{
+			width:10vw;
+		}
+
+		#soundBoard #soundButton{
+			width:auto;
+			padding-left: 2vw;
+			padding-right: 2vw;
+			max-width: 70vw;
+		}
 	</style>
 	<!--<div id="overlay" class="center" style="align-items: center;">
 		<h1>Columbia</h1>
@@ -96,7 +119,10 @@
 	</div>-->
 	<body>
 		<!-- Audio Clips -->
-		<audio id="toiletFlush" src="sounds/toilet_flush.mp3"></audio>
+		<audio id="garbage" src="sounds/garbage.mp3"></audio>
+		<audio id="nasty" src="sounds/nasty.mp3"></audio>
+		<audio id="this-is-great" src="sounds/this-is-great.mp3"></audio>
+
 
 		<!--
 		<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">Play Sound</button>
@@ -104,7 +130,15 @@
 
 
 		<div class="header">
-			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
+			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo"  onclick="PlaySound('garbage')">
+		</div>
+		<div id="soundBoardParent">
+		<div id="soundBoard">
+			<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">-</button>
+			<button id="soundButton" onclick="PlaySound('toiletFlush')">Garbage</button>
+			<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">+</button>
+
+		</div>
 		</div>
 		<h2 id="myName" class="hidden"> Snackbox </h2>		
 		<div id="finalResult" class="hidden">
