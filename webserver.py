@@ -4,7 +4,7 @@ from datetime import datetime
 current_year = datetime.now().year
 sessionId = f'{countryName}{current_year}'
 # also install psycopg2 dependency of flask_sqlalchemy
-from flask import Flask, request, send_from_directory, render_template, session, Response
+from flask import Flask, request, send_from_directory, render_template, session, Response, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy 
@@ -105,7 +105,7 @@ def snackbox():
 	if GAMESTARTED:
 		return render_template('snackbox.html')
 	else:
-		return "game hasn't started"
+		return redirect('/')
 	
 @socketio.on('next_snack')
 def next_snack(data):

@@ -83,10 +83,12 @@ input{
     padding-left: 2rem;
     color:white;
 }
+
 input::placeholder{
     color:White;
 
 }
+
 #snacklist input{
     margin-bottom:1vh;
 }
@@ -101,7 +103,6 @@ button {
     color:white;
     transition: box-shadow .6s ease-in-out,
                 background-color .6s ease-in-out;
- 
 
     box-shadow: 10px 10px var(--button-accent);
     font-family: "Consolas", monospace;
@@ -124,9 +125,7 @@ button {
 
 .pikenet-logo{
     height:8vh;
-    
 }
-
 
 #main-gui{
     margin-top: 2.5vw;
@@ -172,12 +171,9 @@ button {
 }
 
 .rating-button {
-
-   
     height:16vw;
     width:16vw;
     border-radius: 30px;
-    
 }
 
 .left-column button{

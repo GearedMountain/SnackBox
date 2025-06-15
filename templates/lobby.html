@@ -50,8 +50,10 @@
 		
 		.no-image{
 			background-color:#ef4565;
+		}
 
-
+		.buttonSelected{
+			background-color:lightgreen !important;
 		}
 
 		#loading{
@@ -168,8 +170,6 @@
 				newSnackButton.classList.add("no-image")
     		};
 			
-			
-			
 			newSnackButton.id = SnackName
 			newSnackButton.onclick=function(){
 				console.log("image uploading clicked")
@@ -206,7 +206,6 @@
 			socket.emit('snack_updated', { id:ID, newName:NewName });
 		}
 
-		//AddSnack("Awesome")
 		function SnackUpdated(snackid, snackname){
 			socket.emit('snack_updated', { id:snackid, name:snackname});
 		}

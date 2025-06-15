@@ -66,8 +66,8 @@
 		}
 
 		body{
-			overflow-y: hidden;
-			overscroll-behavior: none;
+			/*overflow-y: hidden;
+			overscroll-behavior: none;*/
 
 		}
 
@@ -113,6 +113,11 @@
 			padding-right: 2vw;
 			max-width: 70vw;
 		}
+
+		.snackSelected{
+			transition: background-color 0s ease-in-out;
+			background-color: lightgreen !important;
+		}
 	</style>
 	<!--<div id="overlay" class="center" style="align-items: center;">
 		<h1>Columbia</h1>
@@ -131,11 +136,13 @@
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo"  onclick="PlaySound('garbage')">
 		</div>
 		<div id="soundBoardParent">
+			<!--
 		<div id="soundBoard">
 			<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">-</button>
 			<button id="soundButton" onclick="PlaySound('toiletFlush')">Garbage</button>
 			<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">+</button>
 		</div>
+		-->
 		</div>
 		<h2 id="myName" class="hidden"> Snackbox </h2>		
 		<div id="finalResult" class="hidden">
@@ -197,6 +204,8 @@
 			snacklist.appendChild(newSnack);
 		}
 
+		var ratingAwaitingConfirmationID = 0;
+
 		let availableRatings = []
 		socket.on('update_available_ratings', function(data) {
 			document.getElementById('right-column');
@@ -210,18 +219,31 @@
 					let RatingButton = document.createElement("button");
 					RatingButton.textContent = item;
 					RatingButton.classList.add("rating-button");
+					RatingButton.id = item;
 					RatingButton.addEventListener("click", function() {
 						//alert("Snack rated!");
 						if(!ratedThisSnack){
-							HideRatings()
-							socket.emit('snack_rated', { rating:RatingButton.textContent });
-							ratedThisSnack = true;
+							if(ratingAwaitingConfirmationID === RatingButton.id){
+									// Snack confirmed clicked
+									HideRatings()
+									socket.emit('snack_rated', { rating:RatingButton.textContent });
+									ratedThisSnack = true;
+								} else{
+									try{
+										document.getElementById(ratingAwaitingConfirmationID).classList.remove("snackSelected");
+									} catch{
+
+									}
+									ratingAwaitingConfirmationID = RatingButton.id;
+									document.getElementById(RatingButton.id).classList.add("snackSelected");
+								}
 						}
 					});
 					document.getElementById("right-column").appendChild(RatingButton);
 				}
 			});
 		})
+
 		socket.on('update_snacklist', function(data) {
 			console.log("boutta update the snacklist")
 			console.log("snacklist:" + data)
@@ -235,7 +257,6 @@
 				document.getElementById("loading").remove();
 			}
 			catch{
-
 			}
 			
 		});
@@ -374,9 +395,50 @@
 			socket.emit('next_snack', {data:true});
 
 		}
-
+		var snackAwaitingConfirmationID = 0;
 		function SnackSelected(ID){
-			socket.emit('snack_selected', { id:ID });
+			//Check if the snack has been clicked, if yes then confirm click, if not, go into awaiting confirm state
+			if(snackAwaitingConfirmationID === ID){
+				socket.emit('snack_selected', { id:ID });
+				// Snack confirmed clicked
+			} else{
+				try{
+					document.getElementById("snack-"+snackAwaitingConfirmationID).classList.remove("snackSelected");
+				} catch{
+
+				}
+
+				let img = new Image(); // Create image element dynamically
+				img.src = `/image/${ID}`;
+				try{
+					document.getElementById("snackPhoto").classList.remove('hidden')
+					document.getElementById("snackPhoto").classList.add('block')
+					document.getElementById("snackPhoto").src = "/images/loading.gif"
+				} catch{
+					console.log("Showing loaded failed")
+				}
+
+				img.onload = function() {
+					document.getElementById("snackPhoto").src = `/image/${ID}`// Add to the page only after loading
+					document.getElementById("snackPhoto").classList.remove('hidden')
+					document.getElementById("snackPhoto").classList.add('block')
+
+
+					console.log("Image fully loaded!");
+				}
+
+				// If the image doesnt exist, remove the loading sign too
+				img.onerror = function() {
+        			console.log("Image failed to load.");
+					document.getElementById("snackPhoto").src = "/images/default.jpg"
+					document.getElementById("snackPhoto").classList.add('hidden')
+					document.getElementById("snackPhoto").classList.add('remove')
+
+    			};
+
+				snackAwaitingConfirmationID = ID;
+				document.getElementById("snack-"+ID).classList.add("snackSelected");
+			}
 		}
 
 		function SetDarkmode()
