@@ -89,6 +89,7 @@
 		#playerlist .revealed{
 			background-color:none !important;
 		}
+
 	</style>
 	
 	<body class="center">
@@ -96,6 +97,7 @@
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
 		</div>
 
+	<main id="editting-pannel" class="hidden center">
 		<!--<h1>{{ username }}</h1>-->
 		<form action="/start_game" method="POST">
 			<button id="startGameButton" type="submit">Start Game</button>
@@ -130,14 +132,28 @@
 		<div id="loading">
 			<h1 style="position:fixed;top:45%;vertical-align: middle;">Loading...</h1>
 		</div>
+	</main>
+
+	<div id="loading-pannel">
+		<h1>Please wait for game to start</h1>
+	</div>
+
 	</body>	
 
 	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 	
 	<script>
-		var SnackCount = 0;
+		var myUsername = "{{ username }}";
+		console.log(myUsername + " is your username");
 
-		//var socket = io.connect("https://thepikenet.com");
+		// HARDCODED CREDS if it is either me or ryan allow editing, guests "just see a waiting for game to start" screen
+		if(myUsername.toLowerCase() == "brandon" || myUsername.toLowerCase() == "ryan")
+		{
+			document.getElementById("editting-pannel").classList.remove("hidden");
+			document.getElementById("loading-pannel").classList.add("hidden");
+		}
+
+		var SnackCount = 0;
 		var socket = io.connect();
 
 		const playerlist = document.getElementById('playerlist');

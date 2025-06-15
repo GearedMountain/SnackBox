@@ -154,6 +154,7 @@ button {
     border-bottom-right-radius: 60px;
    /* transition: grid-template-columns 1s ease-in-out;*/
     width: auto;
+    margin-left:2vw;
     height: 35vw;
     padding-bottom: 30px;
 }
