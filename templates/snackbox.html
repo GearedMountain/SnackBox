@@ -400,9 +400,9 @@
 
 		socket.on('translate_id_to_name', function(data) {
 			// snack highlighted
-			console.log("highlighted: " + data.selectedName);
+			console.log("highlighted: " + data.snackSelected);
 			let img = new Image(); // Create image element dynamically
-			img.src = `/image/${data.selectedName}`;
+			img.src = `/image/${data.snackSelected}`;
 			img.onload = function() {
 				document.getElementById("snackPhoto").src = `/image/${data.snackSelected}`// Add to the page only after loading
 				document.getElementById("snackPhoto").classList.remove('hidden')
