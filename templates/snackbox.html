@@ -395,6 +395,31 @@
 			socket.emit('next_snack', {data:true});
 
 		}
+
+		
+
+		socket.on('translate_id_to_name', function(data) {
+			let img = new Image(); // Create image element dynamically
+			img.src = `/image/${ID}`;
+			img.onload = function() {
+				document.getElementById("snackPhoto").src = `/image/${ID}`// Add to the page only after loading
+				document.getElementById("snackPhoto").classList.remove('hidden')
+				document.getElementById("snackPhoto").classList.add('block')
+
+
+				console.log("Image fully loaded!");
+			}
+
+			// If the image doesnt exist, remove the loading sign too
+			img.onerror = function() {
+				console.log("Image failed to load.");
+				document.getElementById("snackPhoto").src = "/images/default.jpg"
+				document.getElementById("snackPhoto").classList.add('hidden')
+				document.getElementById("snackPhoto").classList.add('remove')
+
+			};
+		});
+
 		var snackAwaitingConfirmationID = 0;
 		function SnackSelected(ID){
 			//Check if the snack has been clicked, if yes then confirm click, if not, go into awaiting confirm state
@@ -407,9 +432,9 @@
 				} catch{
 
 				}
+				socket.emit('fetch_snack_image_from_id', {data:ID});
 
-				let img = new Image(); // Create image element dynamically
-				img.src = `/image/${ID}`;
+				
 				try{
 					document.getElementById("snackPhoto").classList.remove('hidden')
 					document.getElementById("snackPhoto").classList.add('block')
@@ -418,23 +443,6 @@
 					console.log("Showing loaded failed")
 				}
 
-				img.onload = function() {
-					document.getElementById("snackPhoto").src = `/image/${ID}`// Add to the page only after loading
-					document.getElementById("snackPhoto").classList.remove('hidden')
-					document.getElementById("snackPhoto").classList.add('block')
-
-
-					console.log("Image fully loaded!");
-				}
-
-				// If the image doesnt exist, remove the loading sign too
-				img.onerror = function() {
-        			console.log("Image failed to load.");
-					document.getElementById("snackPhoto").src = "/images/default.jpg"
-					document.getElementById("snackPhoto").classList.add('hidden')
-					document.getElementById("snackPhoto").classList.add('remove')
-
-    			};
 
 				snackAwaitingConfirmationID = ID;
 				document.getElementById("snack-"+ID).classList.add("snackSelected");

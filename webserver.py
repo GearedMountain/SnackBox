@@ -164,6 +164,12 @@ def snack_selected(data):
 	emit('snack_selected_server', {'snackSelected' : selectedName} ,broadcast=True)
 	emit('update_snacklist',DICT_SNACKS,broadcast=True)
 
+@socketio.on('fetch_snack_image_from_id')
+def fetch_snack_image_from_id(data):
+	selected = data['id']
+	selectedName = DICT_SNACKS[int(selected)]
+	emit('translate_id_to_name', {'snackSelected' : selectedName})
+
 
 @socketio.on('snack_updated')
 def change_snack(data):
