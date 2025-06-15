@@ -404,7 +404,7 @@
 			let img = new Image(); // Create image element dynamically
 			img.src = `/image/${data.selectedName}`;
 			img.onload = function() {
-				document.getElementById("snackPhoto").src = `/image/${data.selectedName}`// Add to the page only after loading
+				document.getElementById("snackPhoto").src = `/image/${data.snackSelected}`// Add to the page only after loading
 				document.getElementById("snackPhoto").classList.remove('hidden')
 				document.getElementById("snackPhoto").classList.add('block')
 
