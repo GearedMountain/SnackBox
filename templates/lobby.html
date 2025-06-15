@@ -94,7 +94,7 @@
 	
 	<body class="center">
 		<div class="header">
-			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo">
+			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo" onclick="SayThis()">
 		</div>
 
 	<main id="editting-pannel" class="hidden center">
@@ -152,6 +152,15 @@
 			document.getElementById("editting-pannel").classList.remove("hidden");
 			document.getElementById("loading-pannel").classList.add("hidden");
 		}
+
+		function SayThis(){
+		console.log("utter");		
+  		const utterance = new SpeechSynthesisUtterance("Hello! This is text to speech in JavaScript.");
+		utterance.volume= 1;
+  		speechSynthesis.speak(utterance);
+		}
+
+		
 
 		var SnackCount = 0;
 		var socket = io.connect();
