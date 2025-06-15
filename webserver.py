@@ -92,8 +92,6 @@ def start_game():
 	print(f"Game PLAYERCOUNT: {PLAYERCOUNT}")
 	
 	socketio.emit('start_game',{'data':True})	
-
-	
 	#emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)
 	
 	return render_template('snackbox.html')
