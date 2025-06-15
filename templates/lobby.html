@@ -106,6 +106,9 @@
 			<h2 style="margin-bottom: 0px;margin-top: 0px;">Joined:</h2>
 			<div id="playerlist"></div>
 		</div>
+		<div>
+			<h2 style="margin-top: 0px;">Snack Count:<span id="snackCountElement">0</span> </h2>
+		</div>
 		<input id="add_snack" placeholder="Snack Name"></input>
 		<div id="bottom-portion" class="center">
 			<div id="snacklist" class="center">
@@ -142,6 +145,8 @@
 		
 		function AddSnackLocal(SnackId, SnackName){
 			SnackCount += 1;
+
+			document.getElementById("snackCountElement").innerHTML = SnackCount;
 			const newSnackInput = document.createElement('input');
 			newSnackInput.id = "snack-" + SnackId;
 			newSnackInput.value = SnackName;
