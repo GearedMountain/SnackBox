@@ -399,6 +399,8 @@
 		
 
 		socket.on('translate_id_to_name', function(data) {
+			// snack highlighted
+			console.log("highlighted: " + data.selectedName);
 			let img = new Image(); // Create image element dynamically
 			img.src = `/image/${data.selectedName}`;
 			img.onload = function() {
