@@ -166,6 +166,7 @@ def snack_selected(data):
 
 @socketio.on('fetch_snack_image_from_id')
 def fetch_snack_image_from_id(data):
+	global DICT_SNACKS
 	selected = data['id']
 	selectedName = DICT_SNACKS[int(selected)]
 	emit('translate_id_to_name', {'snackSelected' : selectedName})
