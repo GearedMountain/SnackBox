@@ -86,7 +86,6 @@ def start_game():
 		PLAYERCOUNT += 1
 		for j in range(SNACKCOUNT):
 			AVAILABLERATINGS[i][j] = j+1
-		print(AVAILABLERATINGS[i])
 			
 	socketio.emit('start_game',{'data':True})	
 	#emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)
