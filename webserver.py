@@ -53,7 +53,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure folder exists
 # Grab all current snacks from the database using the current session ID
 with app.app_context():
 	result = db.session.execute(text('SELECT * FROM public.snacks WHERE "sessionId" = :sessionId'), {'sessionId' : sessionId})
-	print(f'HERE IS THE CURRENT POOL {result}')
 	for row in result:
 		id = row.id
 		SNACKCOUNT += 1
@@ -88,9 +87,7 @@ def start_game():
 		for j in range(SNACKCOUNT):
 			AVAILABLERATINGS[i][j] = j+1
 		print(AVAILABLERATINGS[i])
-		
-	print(f"Game PLAYERCOUNT: {PLAYERCOUNT}")
-	
+			
 	socketio.emit('start_game',{'data':True})	
 	#emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)
 	
@@ -134,7 +131,6 @@ def snack_rated(data):
 	rating = int(data['rating'])
 	logMessage = f"{session['user']} rated {data['rating']}"
 	AVAILABLERATINGS[session['user']][rating-1] = 0
-	print ( AVAILABLERATINGS[session['user']] )
 	DICT_RATEDSNACKS[CURRENTLYRATING] += int(data['rating'])
 
 	DICT_RATINGLOGS[session['user']] = [CURRENTLYRATING, data['rating']]
@@ -256,16 +252,14 @@ def get_image(snackname):
 		result = db.session.execute(text("SELECT id FROM public.snacks WHERE name = :name"), {'name': snackname})
 
 		snack = result.fetchone()
-		print(f"Fetching image for {snackname}, id of {snack[0]}")
 		if result and snack[0]:
             # The image is stored in a bytea column, so we return the raw bytes
 			return send_from_directory('uploads',str(snack[0]))
 			#return Response(snack[0], mimetype='image/jpeg')  # Adjust mimetype if different
 		else:
-			print(f"couldnt find {snackname}")
 			return "Image not found", 404
 	finally:
-		print("finished")
+		print("Image Fetched")
 
 
 # USERS SELECT THEIR USERNAME : TO BE USED BY GUESTS ONLY ONCE IMPLEMENTED
@@ -274,7 +268,6 @@ def username_selected():
 	if 'user' not in session:
 		username = request.form['username']
 		session['user'] = username
-		print ("username selected: " + request.form['username']) 
 	else:
 		print ("user already has session")
 	return render_template('lobby.html', username=session['user'])
@@ -307,7 +300,7 @@ def socket_connected():
 	if 'user' in session:
 		username = session['user']
 		SET_ACTIVESESSIONS.add(username)
-	print (f"Client Joined, current count: {len(SET_ACTIVESESSIONS)}")
+	print (f"Current player count: {len(SET_ACTIVESESSIONS)}")
 	emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)
 	emit('update_snacklist',DICT_SNACKS)
 
@@ -324,7 +317,6 @@ def socket_disconnected():
 		
 			print (f"Player {username} leaving")
 			SET_ACTIVESESSIONS.remove(username)
-		print (f" {username} Removed From Playerlist")	
 	except:
 		print("disconnected user failed")
 	emit('update_playerlist', {'playerlist': ":".join(SET_ACTIVESESSIONS)}, broadcast=True)	
@@ -340,12 +332,12 @@ def reset():
 # STATIC LOCATION RETURN
 @app.route('/images/<filename>')
 def serve_image(filename):
-		print(f"Fetching image {filename}")
+		#print(f"Fetching image {filename}")
 		return send_from_directory('images',filename)
 
 @app.route('/sounds/<filename>')
 def serve_sound(filename):
-		print(f"Fetching sound {filename}")
+		#print(f"Fetching sound {filename}")
 		return send_from_directory('sounds',filename)
 
 @app.route('/styles/<filename>')

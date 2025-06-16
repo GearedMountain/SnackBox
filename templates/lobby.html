@@ -154,13 +154,10 @@
 		}
 
 		function SayThis(){
-		console.log("utter");		
-  		const utterance = new SpeechSynthesisUtterance("Ryan smells like an indian fart");
-		utterance.volume= 1;
-  		speechSynthesis.speak(utterance);
+			const utterance = new SpeechSynthesisUtterance("Utterance");
+			utterance.volume= 1;
+			speechSynthesis.speak(utterance);
 		}
-
-		
 
 		var SnackCount = 0;
 		var socket = io.connect();
