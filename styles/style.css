@@ -98,13 +98,16 @@ input::placeholder{
     color:White;
 
 }
-
+#snacklist
+{
+    width:100%;
+}
 #snacklist input{
     margin-bottom:1vh;
 }
 
 #snacklist button{
-    width:95%;
+    width:80%;
 }
 
 button {
@@ -207,7 +210,7 @@ button {
         aspect-ratio: 1/ 1;
         height:auto;
         width:45%;
-        border-radius: 30px;
+        border-radius: 20px;
         font-size:6rem;
     }
 }
