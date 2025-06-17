@@ -59,6 +59,18 @@ with app.app_context():
 		DICT_SNACKS[row.id] = row.name
 		print(DICT_SNACKS) 
 
+# Zero out variables for restarting the game
+def setup_game_configurations():
+	global SNACKCOUNT
+
+	SNACKCOUNT = 0
+	result = db.session.execute(text('SELECT * FROM public.snacks WHERE "sessionId" = :sessionId'), {'sessionId' : sessionId})
+	for row in result:
+		id = row.id
+		SNACKCOUNT += 1
+		DICT_SNACKS[row.id] = row.name
+		print(DICT_SNACKS) 
+
 # SUPPORTING FUNCTIONS
 def generate_random_id():
 	return str(random.randint(100000,999999))
@@ -323,7 +335,12 @@ def socket_disconnected():
 # DELETE AFTER IMPLEMENTED PROPERLY
 @app.route('/reset')
 def reset():
+	global GAMESTARTED
+	
+	GAMESTARTED = False
+	setup_game_configurations()
 	session.clear()
+	
 	SET_ACTIVESESSIONS.clear()
 	print ("reset")
 	return "reset"
