@@ -21,6 +21,9 @@
     --border-accent:#5898ad;
     --button-color:#5898ad;
     --button-accent:#3e6673;
+
+    --button-color-selected:#2aa34a;
+    --button-accent-selected:#318547;
 }
 .lightmode{
     --base-color: white;
@@ -32,6 +35,9 @@
 
     --button-color:#f15483;
     --button-accent:#940242;
+
+    --button-color-selected:#2aa34a;
+    --button-accent-selected:#318547;
 }
 
 html{
@@ -73,7 +79,7 @@ h2{
     font-family: 'Franklin Gothic Medium Cond', sans-serif;
     width:100%;
     text-align: center;
-    font-size:3rem;
+    font-size:4rem;
 }
 
 input{
@@ -95,6 +101,10 @@ input::placeholder{
 
 #snacklist input{
     margin-bottom:1vh;
+}
+
+#snacklist button{
+    width:95%;
 }
 
 button {
@@ -149,6 +159,7 @@ button {
 }
 
 #snackDisplay{
+    width:100%;
     display: grid;
     background:var(--header-color);
     color:var(--text-color);
@@ -179,6 +190,7 @@ button {
     height:auto;
     width:45%;
     border-radius: 30px;
+    font-size:4rem;
 }
 
 .left-column button{
@@ -189,5 +201,13 @@ button {
 @media (max-width: 600px) {
     html{
         font-size: 14px;
+    }
+
+    .rating-button {
+        aspect-ratio: 1/ 1;
+        height:auto;
+        width:45%;
+        border-radius: 30px;
+        font-size:6rem;
     }
 }

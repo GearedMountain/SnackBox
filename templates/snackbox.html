@@ -63,6 +63,7 @@
 		}
 
 		#entire-viewport{
+			width:auto;
 			max-width: 800px;
 			padding-left: 2.5vw;
 			padding-right: 2.5vw;
@@ -116,8 +117,11 @@
 		}
 
 		.snackSelected{
-			transition: background-color 0s ease-in-out;
-			background-color: lightgreen !important;
+			transition: box-shadow 0s ease-in-out,
+                background-color 0s ease-in-out;
+			background-color:  var(--button-color-selected) !important;
+			box-shadow: 10px 10px var(--button-accent-selected) !important;
+
 		}
 		#snackPhoto{
 			aspect-ratio: 1 / 1;
@@ -131,6 +135,8 @@
 			height:10vw;
 			display: flex;
 			vertical-align: middle;
+			margin:0px;
+
 		}
 		
 		@media (max-width: 800px) {
@@ -146,6 +152,8 @@
     		}
 			#selectedSnack{
 				height:20vw;
+				max-height: 100px;
+				margin:0px;
 				display: flex;
 				vertical-align: middle;
 			}
@@ -192,14 +200,14 @@
 
 		</div>
 		<div id="snackDisplay">
-			<div>
+			<div style="width:100%;">
 				<img id="snackPhoto" class="hidden">
 			</div >
 			<div style="display:flex;width:auto;align-items: center;">
 				<h1 id="selectedSnack" style="text-align: left;width: auto;align-items: center; ">Select a Snack</h1>
 			</div>
 		</div>
-			<h2 class="hidden" id="SnackScoreParent" style="text-align: center;margin:0px;margin-bottom:2.5vh;">Snack Score: <span id="SnackScore">0</span></h2>
+			<h1 class="hidden" id="SnackScoreParent" style="text-align: center;margin:0px;margin-bottom:2.5vh;">Snack Score: <span id="SnackScore">0</span></h1>
 		<div id="main-gui">
 			<div class="left-column">
 				
@@ -273,7 +281,8 @@
 									ratedThisSnack = true;
 								} else{
 									try{
-										document.getElementById(ratingAwaitingConfirmationID).classList.remove("snackSelected");ResizeText();
+										document.getElementById(ratingAwaitingConfirmationID).classList.remove("snackSelected");
+										ResizeText();
 
 									} catch{
 
@@ -403,7 +412,7 @@
 			document.getElementById("selectedSnack").innerHTML = "Select a Snack"
 			document.getElementById("snackPhoto").classList.add('hidden')
 			document.getElementById("snackPhoto").classList.remove('block')
-
+			ResizeText();
 		});
 
 		socket.on('snacks_finished', function(data) {
