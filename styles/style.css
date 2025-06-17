@@ -34,9 +34,14 @@
     --button-accent:#940242;
 }
 
+html{
+    font-size: 14px;
+}
+
 * {
     transition: background-color .6s ease-in-out;
-    box-sizing: border-box
+    box-sizing: border-box;
+    
 }
 body{
     background:var(--body-color);
@@ -74,7 +79,6 @@ h2{
 input{
     font-size:3rem;
     height: 5vh;
-    width:80vw;
     font-family: 'Franklin Gothic Medium Cond', sans-serif;
     border-radius: 30px;
     background-color:var(--button-color);
@@ -98,7 +102,7 @@ button {
     border-width: 0px;
     font-size:3rem;
     height: 5vh;
-    width:80vw;
+    
     background-color: var(--button-color);
     color:white;
     transition: box-shadow .6s ease-in-out,
@@ -130,7 +134,7 @@ button {
 #main-gui{
     margin-top: 2.5vw;
     display: grid;
-    grid-template-columns: 100vw 0vw; /* Two equal columns */
+    grid-template-columns: 100% 0vw; /* Two equal columns */
     gap: 20px;
     transition: grid-template-columns 1s ease-in-out;
     width: 100%;
@@ -140,7 +144,7 @@ button {
 }
 
 #main-gui.expanded {
-    grid-template-columns: 60vw 40vw; /* Both columns equal */
+    grid-template-columns: 55% auto; /* Both columns equal */
     
 }
 
@@ -154,9 +158,8 @@ button {
     border-bottom-right-radius: 60px;
    /* transition: grid-template-columns 1s ease-in-out;*/
     width: auto;
-    margin-left:2vw;
-    height: 35vw;
-    padding-bottom: 30px;
+    height: auto;
+    margin-bottom: 2.5vh;
 }
 
 .right-column {
@@ -172,12 +175,19 @@ button {
 }
 
 .rating-button {
-    height:16vw;
-    width:16vw;
+    aspect-ratio: 1/ 1;
+    height:auto;
+    width:45%;
     border-radius: 30px;
 }
 
 .left-column button{
     width:80%;
     margin-bottom: 2vw;
+}
+
+@media (max-width: 600px) {
+    html{
+        font-size: 14px;
+    }
 }

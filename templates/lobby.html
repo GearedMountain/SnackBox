@@ -4,26 +4,31 @@
 		body{
 			background: var(--base-color);
 		}
+		#entire-viewport{
+			max-width: 800px;
+		}
+
 		#top-portion{
-			width:80vw;
+			width:100%;
 			height:auto;
-			overflow-x:scroll;
+			overflow-x:hidden;
 			margin-top:3vh;
 			background-color:var(--body-color);
 			border-radius: 60px;
 			padding: 2vh;
 			margin-bottom: 3vh;
 		}
+		
 
 		#bottom-portion{
-			width:100vw;
+			width:100%;
 			height:37vh;
 			overflow-x:scroll;
 		}
 		
 		#add_snack{
 			margin-bottom: 2vh;
-			
+			width:100%
 		}
 		.header{
 			border-bottom-left-radius: 60px;
@@ -41,6 +46,7 @@
 		.new-snack-grid button{
 			box-shadow: 0px 0px black;
 			width:100%;
+			max-width: 800px;
 			transition: none !important;
 		}
 
@@ -66,9 +72,14 @@
 			vertical-align: middle;
 		}
 
+		form{
+			width:100%;
+		}
+
 		#startGameButton{
 			margin-top: 0vh;
 			margin-bottom: 0vh;
+			width:100%;
 		}
 
 		#playerlist{
@@ -93,6 +104,7 @@
 	</style>
 	
 	<body class="center">
+		<div id="entire-viewport">
 		<div class="header">
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo" onclick="SayThis()">
 		</div>
@@ -134,10 +146,10 @@
 		</div>
 	</main>
 
-	<div id="loading-pannel">
-		<h1>Please wait for game to start</h1>
+		<div id="loading-pannel">
+			<h1>Please wait for game to start</h1>
+		</div>
 	</div>
-
 	</body>	
 
 	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
