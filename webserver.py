@@ -341,6 +341,7 @@ def reset():
 	setup_game_configurations()
 	session.clear()
 	
+	
 	SET_ACTIVESESSIONS.clear()
 	print ("reset")
 	return "reset"
