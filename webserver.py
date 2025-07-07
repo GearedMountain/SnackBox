@@ -69,7 +69,7 @@ def setup_game_configurations():
 		id = row.id
 		SNACKCOUNT += 1
 		DICT_SNACKS[row.id] = row.name
-		print(DICT_SNACKS) 
+	print(f"Final snacklist: {DICT_SNACKS}") 
 
 # SUPPORTING FUNCTIONS
 def generate_random_id():
