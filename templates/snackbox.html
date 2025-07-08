@@ -98,7 +98,7 @@
 		}
 		
 		#soundBoard{
-			width:100%;
+			width:auto;
  		 	display: flex;
 			align-items: center;
 			text-align: center;
@@ -120,7 +120,7 @@
 			transition: box-shadow 0s ease-in-out,
                 background-color 0s ease-in-out;
 			background-color:  var(--button-color-selected) !important;
-			box-shadow: 10px 10px var(--button-accent-selected) !important;
+			box-shadow: 2px 2px var(--button-accent-selected) !important;
 
 		}
 		#snackPhoto{
@@ -175,25 +175,25 @@
 	</head>
 	<body class="center">
 		<div id="entire-viewport">
-		<audio id="garbage" src="sounds/garbage.mp3"></audio>
-		<audio id="nasty" src="sounds/nasty.mp3"></audio>
-		<audio id="this-is-great" src="sounds/this-is-great.mp3"></audio>
+		<audio id="Garbage" src="sounds/garbage.mp3"></audio>
+		<audio id="Spongebob Bad" src="sounds/nasty.mp3"></audio>
+		<audio id="This is Great" src="sounds/this-is-great.mp3"></audio>
 		<!--
 		<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">Play Sound</button>
 		-->
 
 
 		<div class="header">
-			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo"  onclick="PlaySound('garbage')">
+			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo"  onclick="ShowOptions()">
 		</div>
-		<div id="soundBoardParent">
-			<!--
+		<div id="soundBoardParent" class="center">
+			
 		<div id="soundBoard">
-			<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">-</button>
-			<button id="soundButton" onclick="PlaySound('toiletFlush')">Garbage</button>
-			<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">+</button>
+			<button id="backSound" onclick="MoveSoundboardSelection(-1)">-</button>
+			<button id="soundButton" onclick="PlaySoundBoard()">Garbage</button>
+			<button id="nextSound" onclick="MoveSoundboardSelection(1)">+</button>
 		</div>
-		-->
+		
 		</div>
 		<h2 id="myName" class="hidden"> Snackbox </h2>		
 		<div id="finalResult" class="hidden">
@@ -440,8 +440,6 @@
 			if(snackDisplay){
 				snackDisplay.remove();
 			}
-			
-
 		}
 
 		function NextSnack(){
@@ -449,8 +447,6 @@
 			socket.emit('next_snack', {data:true});
 
 		}
-
-		
 
 		socket.on('translate_id_to_name', function(data) {
 			// snack highlighted
@@ -520,14 +516,38 @@
 
 		}
 
-		function PlaySound(name)
+		//Soundboard functionality
+		function PlaySoundBoard()
 		{
-			console.log("Find sound " + name)
-			document.getElementById(name).play()
+			console.log("Find sound " + Sounds[SelectedSound])
+			document.getElementById(Sounds[SelectedSound]).play()
+		}
+
+		var Sounds = ["Garbage","This is Great","Spongebob Bad"];
+		var SelectedSound = 0;
+		function MoveSoundboardSelection(direction){
+			// Move soundboard selection forward
+			if(direction == 1){ 
+				SelectedSound++;
+				if(SelectedSound > Sounds.length - 1) {
+					SelectedSound = 0;
+				}
+			} else{
+				SelectedSound--;
+				if(SelectedSound < 0) {
+					SelectedSound = Sounds.length - 1;
+				}
+			}
+			document.getElementById("soundButton").innerHTML = Sounds[SelectedSound];
 		}
 
 		if(localStorage.getItem('display') === "light"){
 			SetLightMode();
+		}
+
+		function ShowOptions()
+		{
+			//Show or hide the header options like the darkmode and soundboard
 		}
 
 		function ResizeText() {

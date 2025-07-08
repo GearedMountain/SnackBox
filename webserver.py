@@ -1,4 +1,4 @@
-countryName = "Taiwan"
+countryName = "Test"
 from datetime import datetime
 
 current_year = datetime.now().year
@@ -176,11 +176,9 @@ def fetch_snack_image_from_id(data):
 	selectedName = DICT_SNACKS[int(selected)]
 	emit('translate_id_to_name', {'snackSelected' : selectedName})
 
-
 @socketio.on('snack_updated')
 def change_snack(data):
 	global DICT_SNACKS
-	
 
 	try:
 		oldname = DICT_SNACKS[int(data['id'])]
@@ -213,10 +211,7 @@ def add_snack(data):
 		print("snack already exists")
 	
 	# Add snack to database
-	
 	emit('update_snacklist',DICT_SNACKS,broadcast=True)
-
-
 
 # Uploaded a photo of the snack
 
@@ -249,8 +244,6 @@ def upload_file():
 	return Response(status=302, headers={"Location": "/"})
 
 		#return render_template('lobby.html',username=session['user'])
-
-
 	return "File not allowed"
 
 # Retrieve uploaded photo
@@ -281,7 +274,7 @@ def username_selected():
 		session['user'] = username
 	else:
 		print ("user already has session")
-	return render_template('lobby.html', username=session['user'])
+	return redirect('/')
 
 # CONNECT & DISCONNECT STATEMENTS
 @socketio.on('connect')
