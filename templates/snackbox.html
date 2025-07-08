@@ -35,7 +35,7 @@
 		
 
 		.hidden{
-			display:none important!;
+			display:none !important;
 		}
 
 		.block{
@@ -91,7 +91,23 @@
 			width:100%;
 		}
 
+		#optionsHeaderMenu{
+			height:auto;
+			transition: max-height 2s ease-in-out;
+			overflow-y: hidden;
+			max-height: 800px;
+		}
+
+		
+		#optionsHeaderMenu.inactive{ 
+			max-height: 0px;
+			padding-top: 0vh;
+			padding-bottom: 0vh;
+		}
+
 		#soundBoardParent{
+			padding-top: 1.5vh;
+			padding-bottom: 1.5vh;
 			width:100%;
 			display: flex;
 			align-items: center;
@@ -186,14 +202,14 @@
 		<div class="header">
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo"  onclick="ShowOptions()">
 		</div>
-		<div id="soundBoardParent" class="center">
-			
-		<div id="soundBoard">
-			<button id="backSound" onclick="MoveSoundboardSelection(-1)">-</button>
-			<button id="soundButton" onclick="PlaySoundBoard()">Garbage</button>
-			<button id="nextSound" onclick="MoveSoundboardSelection(1)">+</button>
-		</div>
-		
+		<div id="optionsHeaderMenu" class="inactive">
+			<div id="soundBoardParent" class="center">	
+				<div id="soundBoard">
+					<button id="backSound" onclick="MoveSoundboardSelection(-1)">-</button>
+					<button id="soundButton" onclick="PlaySoundBoard()">Garbage</button>
+					<button id="nextSound" onclick="MoveSoundboardSelection(1)">+</button>
+				</div>
+			</div>
 		</div>
 		<h2 id="myName" class="hidden"> Snackbox </h2>		
 		<div id="finalResult" class="hidden">
@@ -548,6 +564,11 @@
 		function ShowOptions()
 		{
 			//Show or hide the header options like the darkmode and soundboard
+			if(document.getElementById("optionsHeaderMenu").classList.contains("inactive")){
+				document.getElementById("optionsHeaderMenu").classList.remove("inactive");
+			} else{
+				document.getElementById("optionsHeaderMenu").classList.add("inactive");
+			}
 		}
 
 		function ResizeText() {
