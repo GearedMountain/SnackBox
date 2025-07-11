@@ -92,8 +92,11 @@
 		}
 
 		#optionsHeaderMenu{
+			background-color: var(--header-color);
 			height:auto;
-			transition: max-height 2s ease-in-out;
+			
+			transition: max-height 2s ease-in-out,
+			    background-color .6s ease-in-out;
 			overflow-y: hidden;
 			max-height: 800px;
 		}
@@ -202,7 +205,10 @@
 		<div class="header">
 			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo"  onclick="ShowOptions()">
 		</div>
-		<div id="optionsHeaderMenu" class="inactive">
+		<div id="optionsHeaderMenu" class="inactive" style="width:100%;">
+			<div id="optionsHeaderButtons" class="center">
+				<button id="changeColorSchemeButton" onclick="ChangeColorScheme()"> Light Mode </button>
+			</div>
 			<div id="soundBoardParent" class="center">	
 				<div id="soundBoard">
 					<button id="backSound" onclick="MoveSoundboardSelection(-1)">-</button>
@@ -569,6 +575,18 @@
 			} else{
 				document.getElementById("optionsHeaderMenu").classList.add("inactive");
 			}
+		}
+
+		function ChangeColorScheme(){
+			if(localStorage.getItem('display') === "light"){
+				SetDarkmode();
+				document.getElementById("changeColorSchemeButton").innerHTML = "Light Mode";
+			} else{
+				document.getElementById("changeColorSchemeButton").innerHTML = "Dark Mode";
+				SetLightMode();
+			}
+
+			console.log("Change Scheme");
 		}
 
 		function ResizeText() {
