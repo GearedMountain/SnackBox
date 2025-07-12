@@ -156,7 +156,6 @@
 	
 	<script>
 		// Play the national anthem
-		document.getElementById("anthem").play()
 
 		var myUsername = "{{ username }}";
 		console.log(myUsername + " is your username");
@@ -166,6 +165,8 @@
 		{
 			document.getElementById("editting-pannel").classList.remove("hidden");
 			document.getElementById("loading-pannel").classList.add("hidden");
+					document.getElementById("anthem").play()
+
 		}
 
 		function SayThis(){
