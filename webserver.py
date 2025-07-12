@@ -256,6 +256,7 @@ def get_image(snackname):
 		result = db.session.execute(text("SELECT id FROM public.snacks WHERE name = :name"), {'name': snackname})
 
 		snack = result.fetchone()
+		print("fetching: " + snack[0])
 		if result and snack[0]:
             # The image is stored in a bytea column, so we return the raw bytes
 			return send_from_directory('uploads',str(snack[0]))
