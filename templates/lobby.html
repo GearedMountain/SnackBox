@@ -106,7 +106,7 @@
 	<body class="center">
 		<div id="entire-viewport">
 		<div class="header">
-			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo" onclick="SayThis()">
+			<img src="images/PikeNetLogo.png" id="pikenetLogo" class="pikenet-logo" onclick="PlayAnthem()">
 		</div>
 
 	<main id="editting-pannel" class="hidden center">
@@ -168,11 +168,6 @@
 
 		}
 
-		function SayThis(){
-			const utterance = new SpeechSynthesisUtterance("Utterance");
-			utterance.volume= 1;
-			speechSynthesis.speak(utterance);
-		}
 
 		var SnackCount = 0;
 		var socket = io.connect();
@@ -326,9 +321,8 @@
 			SetLightMode();
 		}
 
-		document.addEventListener("DOMContentLoaded", function () {
+		PlayAnthem(){
    			document.getElementById("anthem").play()
-		});
-
+		}
 	</script>
 </html>
