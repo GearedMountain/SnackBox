@@ -102,7 +102,7 @@
 		}
 
 	</style>
-	
+	<audio id="anthem" src="sounds/anthem.mp3"></audio>
 	<body class="center">
 		<div id="entire-viewport">
 		<div class="header">
@@ -155,6 +155,9 @@
 	<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 	
 	<script>
+		// Play the national anthem
+		document.getElementById(anthem).play()
+
 		var myUsername = "{{ username }}";
 		console.log(myUsername + " is your username");
 
