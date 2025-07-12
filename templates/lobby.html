@@ -165,7 +165,6 @@
 		{
 			document.getElementById("editting-pannel").classList.remove("hidden");
 			document.getElementById("loading-pannel").classList.add("hidden");
-					document.getElementById("anthem").play()
 
 		}
 
@@ -326,5 +325,10 @@
 		if(localStorage.getItem('display') === "light"){
 			SetLightMode();
 		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+   			document.getElementById("anthem").play()
+		});
+
 	</script>
 </html>
