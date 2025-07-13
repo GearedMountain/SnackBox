@@ -81,7 +81,7 @@ def index():
 	
 	if 'user' in session:
 		print ("session already created")
-		return render_template('lobby.html',username=session['user'])
+		return render_template('lobby.html',username=session['user'], nation=countryName)
 	else:
 		return render_template('index.html')
 
