@@ -199,6 +199,8 @@
 		<audio id="Garbage" src="sounds/garbage.mp3"></audio>
 		<audio id="Spongebob Bad" src="sounds/nasty.mp3"></audio>
 		<audio id="This is Great" src="sounds/this-is-great.mp3"></audio>
+		<audio id="Thats Pretty Good" src="sounds/thats-pretty-good.mp3"></audio>
+
 		<!--
 		<button id="playToiletFlush" onclick="PlaySound('toiletFlush')">Play Sound</button>
 		-->
@@ -547,7 +549,7 @@
 			document.getElementById(Sounds[SelectedSound]).play()
 		}
 
-		var Sounds = ["Garbage","This is Great","Spongebob Bad"];
+		var Sounds = ["Garbage","This is Great","Spongebob Bad", "Thats Pretty Good"];
 		var SelectedSound = 0;
 		function MoveSoundboardSelection(direction){
 			// Move soundboard selection forward
@@ -601,6 +603,12 @@
 				fontSize -= 0.5;
 				el.style.fontSize = fontSize + "vh";
 			}
+		}
+
+		function SayThis(){
+			const utterance = new SpeechSynthesisUtterance("Mom wont try it because shes lame");
+			utterance.volume= 1;
+			speechSynthesis.speak(utterance);
 		}
 
 		window.addEventListener("load", ResizeText);
