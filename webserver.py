@@ -59,6 +59,7 @@ with app.app_context():
 		DICT_SNACKS[row.id] = row.name
 		print(DICT_SNACKS) 
 
+
 # Zero out variables for restarting the game
 def setup_game_configurations():
 	global SNACKCOUNT
