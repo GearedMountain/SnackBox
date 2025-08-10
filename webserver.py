@@ -62,6 +62,7 @@ with app.app_context():
 # Zero out variables for restarting the game
 def setup_game_configurations():
 	global SNACKCOUNT
+	
 	SNACKCOUNT = 0
 	result = db.session.execute(text('SELECT * FROM public.snacks WHERE "sessionId" = :sessionId'), {'sessionId' : sessionId})
 	for row in result:
