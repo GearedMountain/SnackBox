@@ -62,7 +62,6 @@ with app.app_context():
 # Zero out variables for restarting the game
 def setup_game_configurations():
 	global SNACKCOUNT
-	
 	SNACKCOUNT = 0
 	result = db.session.execute(text('SELECT * FROM public.snacks WHERE "sessionId" = :sessionId'), {'sessionId' : sessionId})
 	for row in result:
@@ -78,7 +77,6 @@ def generate_random_id():
 # USER ENTERS WEBSITE
 @app.route('/')
 def index():
-	
 	if 'user' in session:
 		print ("session already created")
 		return render_template('lobby.html',username=session['user'], nation=countryName)
