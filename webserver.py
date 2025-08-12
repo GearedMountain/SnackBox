@@ -15,6 +15,7 @@ import random
 app = Flask(__name__)
 app.secret_key = "god_i_hate_python"
 
+
 # Connect to postgres database
 # Utilize environment variable with dotenv for production rollout 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://gamer:6644@192.168.50.210/pikenet'
