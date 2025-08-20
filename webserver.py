@@ -102,7 +102,6 @@ def start_game():
 	
 	return render_template('snackbox.html')
 	
-
 @app.route('/snackbox')
 def snackbox():
 	global GAMESTARTED
